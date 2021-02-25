@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["trace","Wraps the provided service factory with a transform that automatically enters/exits the given span."]],"struct":[["TracingService","A `Service` implementation that automatically enters/exits tracing spans for the wrapped inner service."],["TracingTransform","A `Transform` implementation that wraps services with a [`TracingService`]."]]});

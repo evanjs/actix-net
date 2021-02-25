@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["ConnectKind",""],["ConnectorError",""]],"struct":[["Connect","Connect request"],["Connector","Tcp connector"],["DefaultConnector",""],["TcpConnector","Tcp stream connector service"]],"trait":[["RequestPort","Port of the request"]]});

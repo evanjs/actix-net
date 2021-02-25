@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ResolveError","The error type for errors that get returned in the crate"],["Resolver",""]],"trait":[["RequestHost","Host name of the request"]]});

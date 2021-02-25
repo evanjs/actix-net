@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["StreamDispatcher",""],["TakeItem","`NewService` that implements, read one item from the stream."],["TakeItemService","`NewService` that implements, read one request from framed object feature."]]});

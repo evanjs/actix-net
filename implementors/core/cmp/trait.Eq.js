@@ -1,10 +1,5 @@
 (function() {var implementors = {};
-implementors["actix_net"] = [{text:"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html\" title=\"trait core::cmp::Eq\">Eq</a> for <a class=\"struct\" href=\"actix_net/connector/struct.Connect.html\" title=\"struct actix_net::connector::Connect\">Connect</a>",synthetic:false,types:["actix_net::connector::Connect"]},{text:"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html\" title=\"trait core::cmp::Eq\">Eq</a> for <a class=\"enum\" href=\"actix_net/connector/enum.ConnectKind.html\" title=\"enum actix_net::connector::ConnectKind\">ConnectKind</a>",synthetic:false,types:["actix_net::connector::ConnectKind"]},];
-
-            if (window.register_implementors) {
-                window.register_implementors(implementors);
-            } else {
-                window.pending_implementors = implementors;
-            }
-        
-})()
+implementors["actix_router"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html\" title=\"trait core::cmp::Eq\">Eq</a> for <a class=\"struct\" href=\"actix_router/struct.ResourceDef.html\" title=\"struct actix_router::ResourceDef\">ResourceDef</a>","synthetic":false,"types":["actix_router::resource::ResourceDef"]}];
+implementors["actix_tls"] = [{"text":"impl&lt;T:&nbsp;<a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html\" title=\"trait core::cmp::Eq\">Eq</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html\" title=\"trait core::cmp::Eq\">Eq</a> for <a class=\"struct\" href=\"actix_tls/connect/struct.Connect.html\" title=\"struct actix_tls::connect::Connect\">Connect</a>&lt;T&gt;","synthetic":false,"types":["actix_tls::connect::connect::Connect"]}];
+implementors["bytestring"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html\" title=\"trait core::cmp::Eq\">Eq</a> for <a class=\"struct\" href=\"bytestring/struct.ByteString.html\" title=\"struct bytestring::ByteString\">ByteString</a>","synthetic":false,"types":["bytestring::ByteString"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

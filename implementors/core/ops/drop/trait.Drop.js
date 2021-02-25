@@ -1,10 +1,3 @@
 (function() {var implementors = {};
-implementors["actix_net"] = [{text:"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"actix_net/counter/struct.CounterGuard.html\" title=\"struct actix_net::counter::CounterGuard\">CounterGuard</a>",synthetic:false,types:["actix_net::counter::CounterGuard"]},];
-
-            if (window.register_implementors) {
-                window.register_implementors(implementors);
-            } else {
-                window.pending_implementors = implementors;
-            }
-        
-})()
+implementors["actix_utils"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"actix_utils/counter/struct.CounterGuard.html\" title=\"struct actix_utils::counter::CounterGuard\">CounterGuard</a>","synthetic":false,"types":["actix_utils::counter::CounterGuard"]},{"text":"impl&lt;T&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"actix_utils/mpsc/struct.Sender.html\" title=\"struct actix_utils::mpsc::Sender\">Sender</a>&lt;T&gt;","synthetic":false,"types":["actix_utils::mpsc::Sender"]},{"text":"impl&lt;T&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"actix_utils/mpsc/struct.Receiver.html\" title=\"struct actix_utils::mpsc::Receiver\">Receiver</a>&lt;T&gt;","synthetic":false,"types":["actix_utils::mpsc::Receiver"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

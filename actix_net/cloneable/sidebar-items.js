@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CloneableService","Service that allows to turn non-clone service to a service with `Clone` impl"]]});
