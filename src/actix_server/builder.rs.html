@@ -501,17 +501,16 @@
 <span id="500">500</span>
 <span id="501">501</span>
 <span id="502">502</span>
-<span id="503">503</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">future</span>::<span class="ident">Future</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">pin</span>::<span class="ident">Pin</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">mem</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">future</span>::<span class="ident">Future</span>,
+    <span class="ident">io</span>, <span class="ident">mem</span>,
+    <span class="ident">pin</span>::<span class="ident">Pin</span>,
+    <span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>},
+    <span class="ident">time</span>::<span class="ident">Duration</span>,
+};
 
-<span class="kw">use</span> <span class="ident">actix_rt</span>::<span class="ident">net</span>::<span class="ident">TcpStream</span>;
-<span class="kw">use</span> <span class="ident">actix_rt</span>::<span class="ident">time</span>::{<span class="ident">sleep_until</span>, <span class="ident">Instant</span>};
-<span class="kw">use</span> <span class="ident">actix_rt</span>::{<span class="self">self</span> <span class="kw">as</span> <span class="ident">rt</span>, <span class="ident">System</span>};
+<span class="kw">use</span> <span class="ident">actix_rt</span>::{<span class="self">self</span> <span class="kw">as</span> <span class="ident">rt</span>, <span class="ident">net</span>::<span class="ident">TcpStream</span>, <span class="ident">time</span>::<span class="ident">sleep</span>, <span class="ident">System</span>};
 <span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">error</span>, <span class="ident">info</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">mpsc</span>::{<span class="ident">unbounded_channel</span>, <span class="ident">UnboundedReceiver</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">oneshot</span>;
@@ -627,13 +626,13 @@
         <span class="self">self</span>
     }
 
-    <span class="doccomment">/// Stop actix system.</span>
+    <span class="doccomment">/// Stop Actix system.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">system_exit</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">exit</span> <span class="op">=</span> <span class="bool-val">true</span>;
         <span class="self">self</span>
     }
 
-    <span class="doccomment">/// Disable signal handling</span>
+    <span class="doccomment">/// Disable signal handling.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">disable_signals</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">no_signals</span> <span class="op">=</span> <span class="bool-val">true</span>;
         <span class="self">self</span>
@@ -641,9 +640,8 @@
 
     <span class="doccomment">/// Timeout for graceful workers shutdown in seconds.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// After receiving a stop signal, workers have this much time to finish</span>
-    <span class="doccomment">/// serving requests. Workers still alive after the timeout are force</span>
-    <span class="doccomment">/// dropped.</span>
+    <span class="doccomment">/// After receiving a stop signal, workers have this much time to finish serving requests.</span>
+    <span class="doccomment">/// Workers still alive after the timeout are force dropped.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// By default shutdown timeout sets to 30 seconds.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown_timeout</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sec</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
@@ -652,11 +650,10 @@
         <span class="self">self</span>
     }
 
-    <span class="doccomment">/// Execute external configuration as part of the server building</span>
-    <span class="doccomment">/// process.</span>
+    <span class="doccomment">/// Execute external configuration as part of the server building process.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This function is useful for moving parts of configuration to a</span>
-    <span class="doccomment">/// different module or even library.</span>
+    <span class="doccomment">/// This function is useful for moving parts of configuration to a different module or</span>
+    <span class="doccomment">/// even library.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">configure</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ServerBuilder</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ServiceConfig</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
@@ -773,6 +770,7 @@
 
         <span class="self">self</span>.<span class="ident">sockets</span>
             .<span class="ident">push</span>((<span class="ident">token</span>, <span class="ident">name</span>.<span class="ident">as_ref</span>().<span class="ident">to_string</span>(), <span class="ident">MioListener</span>::<span class="ident">from</span>(<span class="ident">lst</span>)));
+
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
@@ -898,7 +896,7 @@
                         }
                         <span class="kw">if</span> <span class="ident">exit</span> {
                             <span class="ident">rt</span>::<span class="ident">spawn</span>(<span class="kw">async</span> {
-                                <span class="ident">sleep_until</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">300</span>)).<span class="kw">await</span>;
+                                <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">300</span>)).<span class="kw">await</span>;
                                 <span class="ident">System</span>::<span class="ident">current</span>().<span class="ident">stop</span>();
                             });
                         }
@@ -907,7 +905,7 @@
                     <span class="comment">// we need to stop system if server was spawned</span>
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">exit</span> {
                         <span class="ident">rt</span>::<span class="ident">spawn</span>(<span class="kw">async</span> {
-                            <span class="ident">sleep_until</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">300</span>)).<span class="kw">await</span>;
+                            <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">300</span>)).<span class="kw">await</span>;
                             <span class="ident">System</span>::<span class="ident">current</span>().<span class="ident">stop</span>();
                         });
                     }

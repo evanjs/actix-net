@@ -427,12 +427,14 @@
 <span id="426">426</span>
 <span id="427">427</span>
 <span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">thread</span>};
 
 <span class="kw">use</span> <span class="ident">actix_rt</span>::{
-    <span class="ident">time</span>::{<span class="ident">sleep_until</span>, <span class="ident">Instant</span>},
+    <span class="ident">time</span>::{<span class="ident">sleep</span>, <span class="ident">Instant</span>},
     <span class="ident">System</span>,
 };
 <span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">error</span>, <span class="ident">info</span>};
@@ -446,14 +448,17 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">Token</span>;
 
 <span class="kw">struct</span> <span class="ident">ServerSocketInfo</span> {
-    <span class="comment">// addr for socket. mainly used for logging.</span>
+    <span class="doccomment">/// Address of socket. Mainly used for logging.</span>
     <span class="ident">addr</span>: <span class="ident">SocketAddr</span>,
-    <span class="comment">// be ware this is the crate token for identify socket and should not be confused with</span>
-    <span class="comment">// mio::Token</span>
+
+    <span class="doccomment">/// Beware this is the crate token for identify socket and should not be confused</span>
+    <span class="doccomment">/// with `mio::Token`.</span>
     <span class="ident">token</span>: <span class="ident">Token</span>,
+
     <span class="ident">lst</span>: <span class="ident">MioListener</span>,
-    <span class="comment">// timeout is used to mark the deadline when this socket&#39;s listener should be registered again</span>
-    <span class="comment">// after an error.</span>
+
+    <span class="doccomment">/// Timeout is used to mark the deadline when this socket&#39;s listener should be registered again</span>
+    <span class="doccomment">/// after an error.</span>
     <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span>,
 }
 
@@ -656,10 +661,9 @@
                             <span class="prelude-val">Some</span>(<span class="ident">WakerInterest</span>::<span class="ident">Stop</span>) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="kw">return</span> <span class="self">self</span>.<span class="ident">deregister_all</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sockets</span>);
                             }
-                            <span class="comment">// waker queue is drained.</span>
+                            <span class="comment">// waker queue is drained</span>
                             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
-                                <span class="comment">// Reset the WakerQueue before break so it does not grow</span>
-                                <span class="comment">// infinitely.</span>
+                                <span class="comment">// Reset the WakerQueue before break so it does not grow infinitely</span>
                                 <span class="ident">WakerQueue</span>::<span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">guard</span>);
                                 <span class="kw">break</span> <span class="lifetime">&#39;waker</span>;
                             }
@@ -758,8 +762,8 @@
                     }
                     <span class="prelude-val">Err</span>(<span class="ident">tmp</span>) <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="comment">// worker lost contact and could be gone. a message is sent to</span>
-                        <span class="comment">// `ServerBuilder` future to notify it a new worker should be made.</span>
-                        <span class="comment">// after that remove the fault worker.</span>
+                        <span class="comment">// `ServerBuilder` future to notify it a new worker should be made</span>
+                        <span class="comment">// after that remove the fault worker</span>
                         <span class="self">self</span>.<span class="ident">srv</span>.<span class="ident">worker_faulted</span>(<span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">idx</span>);
                         <span class="ident">msg</span> <span class="op">=</span> <span class="ident">tmp</span>;
                         <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">swap_remove</span>(<span class="self">self</span>.<span class="ident">next</span>);
@@ -833,15 +837,15 @@
                             <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Can not deregister server socket {}&quot;</span>, <span class="ident">err</span>);
                         }
 
-                        <span class="comment">// sleep after error. write the timeout to socket info as later the poll</span>
-                        <span class="comment">// would need it mark which socket and when it&#39;s listener should be</span>
-                        <span class="comment">// registered.</span>
+                        <span class="comment">// sleep after error. write the timeout to socket info as later</span>
+                        <span class="comment">// the poll would need it mark which socket and when it&#39;s</span>
+                        <span class="comment">// listener should be registered</span>
                         <span class="ident">info</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">500</span>));
 
                         <span class="comment">// after the sleep a Timer interest is sent to Accept Poll</span>
                         <span class="kw">let</span> <span class="ident">waker</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">waker</span>.<span class="ident">clone</span>();
                         <span class="ident">System</span>::<span class="ident">current</span>().<span class="ident">arbiter</span>().<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                            <span class="ident">sleep_until</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">510</span>)).<span class="kw">await</span>;
+                            <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">510</span>)).<span class="kw">await</span>;
                             <span class="ident">waker</span>.<span class="ident">wake</span>(<span class="ident">WakerInterest</span>::<span class="ident">Timer</span>);
                         });
 

@@ -435,7 +435,7 @@
     <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">A</span>::<span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">E</span>,
 {
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">fut</span>: <span class="ident">A</span>::<span class="ident">Future</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">MapErrServiceFuture</span> { <span class="ident">f</span>, <span class="ident">fut</span> }
+        <span class="ident">MapErrServiceFuture</span> { <span class="ident">fut</span>, <span class="ident">f</span> }
     }
 }
 
