@@ -193,11 +193,6 @@
 <span id="192">192</span>
 <span id="193">193</span>
 <span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::<span class="ident">VecDeque</span>,
@@ -273,7 +268,7 @@
         <span class="ident">port</span>: <span class="ident">u16</span>,
         <span class="ident">local_addr</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IpAddr</span><span class="op">&gt;</span>,
         <span class="ident">addrs</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">stream</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ReusableBoxFuture</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpStream</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">stream</span>: <span class="ident">ReusableBoxFuture</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpStream</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     },
     <span class="ident">Error</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ConnectError</span><span class="op">&gt;</span>),
 }
@@ -304,18 +299,22 @@
                 <span class="ident">port</span>,
                 <span class="ident">local_addr</span>,
                 <span class="ident">addrs</span>: <span class="prelude-val">None</span>,
-                <span class="ident">stream</span>: <span class="prelude-val">Some</span>(<span class="ident">ReusableBoxFuture</span>::<span class="ident">new</span>(<span class="ident">connect</span>(<span class="ident">addr</span>, <span class="ident">local_addr</span>))),
+                <span class="ident">stream</span>: <span class="ident">ReusableBoxFuture</span>::<span class="ident">new</span>(<span class="ident">connect</span>(<span class="ident">addr</span>, <span class="ident">local_addr</span>)),
             },
 
             <span class="comment">// when resolver returns multiple socket addr for request they would be popped from</span>
             <span class="comment">// front end of queue and returns with the first successful tcp connection.</span>
-            <span class="ident">ConnectAddrs</span>::<span class="ident">Multi</span>(<span class="ident">addrs</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TcpConnectorResponse</span>::<span class="ident">Response</span> {
-                <span class="ident">req</span>: <span class="prelude-val">Some</span>(<span class="ident">req</span>),
-                <span class="ident">port</span>,
-                <span class="ident">local_addr</span>,
-                <span class="ident">addrs</span>: <span class="prelude-val">Some</span>(<span class="ident">addrs</span>),
-                <span class="ident">stream</span>: <span class="prelude-val">None</span>,
-            },
+            <span class="ident">ConnectAddrs</span>::<span class="ident">Multi</span>(<span class="kw-2">mut</span> <span class="ident">addrs</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="ident">addrs</span>.<span class="ident">pop_front</span>().<span class="ident">unwrap</span>();
+
+                <span class="ident">TcpConnectorResponse</span>::<span class="ident">Response</span> {
+                    <span class="ident">req</span>: <span class="prelude-val">Some</span>(<span class="ident">req</span>),
+                    <span class="ident">port</span>,
+                    <span class="ident">local_addr</span>,
+                    <span class="ident">addrs</span>: <span class="prelude-val">Some</span>(<span class="ident">addrs</span>),
+                    <span class="ident">stream</span>: <span class="ident">ReusableBoxFuture</span>::<span class="ident">new</span>(<span class="ident">connect</span>(<span class="ident">addr</span>, <span class="ident">local_addr</span>)),
+                }
+            }
         }
     }
 }
@@ -334,39 +333,30 @@
                 <span class="ident">addrs</span>,
                 <span class="ident">stream</span>,
             } <span class="op">=</span><span class="op">&gt;</span> <span class="kw">loop</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new</span>) <span class="op">=</span> <span class="ident">stream</span>.<span class="ident">as_mut</span>() {
-                    <span class="kw">match</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">new</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)) {
-                        <span class="prelude-val">Ok</span>(<span class="ident">sock</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
-                            <span class="macro">trace</span><span class="macro">!</span>(
-                                <span class="string">&quot;TCP connector: successfully connected to {:?} - {:?}&quot;</span>,
-                                <span class="ident">req</span>.<span class="ident">hostname</span>(),
-                                <span class="ident">sock</span>.<span class="ident">peer_addr</span>()
-                            );
-                            <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">Connection</span>::<span class="ident">new</span>(<span class="ident">sock</span>, <span class="ident">req</span>)));
-                        }
+                <span class="kw">match</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">stream</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">sock</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+                        <span class="macro">trace</span><span class="macro">!</span>(
+                            <span class="string">&quot;TCP connector: successfully connected to {:?} - {:?}&quot;</span>,
+                            <span class="ident">req</span>.<span class="ident">hostname</span>(),
+                            <span class="ident">sock</span>.<span class="ident">peer_addr</span>()
+                        );
+                        <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">Connection</span>::<span class="ident">new</span>(<span class="ident">sock</span>, <span class="ident">req</span>)));
+                    }
 
-                        <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="macro">trace</span><span class="macro">!</span>(
-                                <span class="string">&quot;TCP connector: failed to connect to {:?} port: {}&quot;</span>,
-                                <span class="ident">req</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">hostname</span>(),
-                                <span class="ident">port</span>,
-                            );
+                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="macro">trace</span><span class="macro">!</span>(
+                            <span class="string">&quot;TCP connector: failed to connect to {:?} port: {}&quot;</span>,
+                            <span class="ident">req</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">hostname</span>(),
+                            <span class="ident">port</span>,
+                        );
 
-                            <span class="kw">if</span> <span class="ident">addrs</span>.<span class="ident">is_none</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">addrs</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">is_empty</span>() {
-                                <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">ConnectError</span>::<span class="ident">Io</span>(<span class="ident">err</span>)));
-                            }
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">addr</span>) <span class="op">=</span> <span class="ident">addrs</span>.<span class="ident">as_mut</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">addrs</span><span class="op">|</span> <span class="ident">addrs</span>.<span class="ident">pop_front</span>()) {
+                            <span class="ident">stream</span>.<span class="ident">set</span>(<span class="ident">connect</span>(<span class="ident">addr</span>, <span class="kw-2">*</span><span class="ident">local_addr</span>));
+                        } <span class="kw">else</span> {
+                            <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">ConnectError</span>::<span class="ident">Io</span>(<span class="ident">err</span>)));
                         }
                     }
-                }
-
-                <span class="comment">// try to connect</span>
-                <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="ident">addrs</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>().<span class="ident">pop_front</span>().<span class="ident">unwrap</span>();
-
-                <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">connect</span>(<span class="ident">addr</span>, <span class="kw-2">*</span><span class="ident">local_addr</span>);
-                <span class="kw">match</span> <span class="ident">stream</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">rbf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">rbf</span>.<span class="ident">set</span>(<span class="ident">fut</span>),
-                    <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">stream</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ReusableBoxFuture</span>::<span class="ident">new</span>(<span class="ident">fut</span>)),
                 }
             },
         }
