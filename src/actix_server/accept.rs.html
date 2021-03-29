@@ -426,9 +426,6 @@
 <span id="425">425</span>
 <span id="426">426</span>
 <span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">thread</span>};
@@ -640,17 +637,7 @@
                             }
                             <span class="prelude-val">Some</span>(<span class="ident">WakerInterest</span>::<span class="ident">Pause</span>) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">drop</span>(<span class="ident">guard</span>);
-                                <span class="ident">sockets</span>.<span class="ident">iter_mut</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> {
-                                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">deregister</span>(<span class="ident">info</span>) {
-                                        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">info</span><span class="macro">!</span>(
-                                            <span class="string">&quot;Paused accepting connections on {}&quot;</span>,
-                                            <span class="ident">info</span>.<span class="ident">addr</span>
-                                        ),
-                                        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                                            <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Can not deregister server socket {}&quot;</span>, <span class="ident">e</span>)
-                                        }
-                                    }
-                                });
+                                <span class="self">self</span>.<span class="ident">deregister_all</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sockets</span>);
                             }
                             <span class="prelude-val">Some</span>(<span class="ident">WakerInterest</span>::<span class="ident">Resume</span>) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">drop</span>(<span class="ident">guard</span>);
@@ -727,10 +714,18 @@
         <span class="self">self</span>.<span class="ident">poll</span>.<span class="ident">registry</span>().<span class="ident">deregister</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">info</span>.<span class="ident">lst</span>)
     }
 
+    <span class="kw">fn</span> <span class="ident">deregister_logged</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">info</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ServerSocketInfo</span>) {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">deregister</span>(<span class="ident">info</span>) {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Paused accepting connections on {}&quot;</span>, <span class="ident">info</span>.<span class="ident">addr</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Can not deregister server socket {}&quot;</span>, <span class="ident">e</span>)
+            }
+        }
+    }
+
     <span class="kw">fn</span> <span class="ident">deregister_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>) {
         <span class="ident">sockets</span>.<span class="ident">iter_mut</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> {
-            <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Accepting connections on {} has been paused&quot;</span>, <span class="ident">info</span>.<span class="ident">addr</span>);
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">deregister</span>(<span class="ident">info</span>);
+            <span class="self">self</span>.<span class="ident">deregister_logged</span>(<span class="ident">info</span>);
         });
     }
 
@@ -820,43 +815,42 @@
 
     <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>, <span class="ident">token</span>: <span class="ident">usize</span>) {
         <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">info</span>) <span class="op">=</span> <span class="ident">sockets</span>.<span class="ident">get_mut</span>(<span class="ident">token</span>) {
-                <span class="kw">match</span> <span class="ident">info</span>.<span class="ident">lst</span>.<span class="ident">accept</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>((<span class="ident">io</span>, <span class="ident">addr</span>))) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Conn</span> {
+            <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">sockets</span>
+                .<span class="ident">get_mut</span>(<span class="ident">token</span>)
+                .<span class="ident">expect</span>(<span class="string">&quot;ServerSocketInfo is removed from Slab&quot;</span>);
+
+            <span class="kw">match</span> <span class="ident">info</span>.<span class="ident">lst</span>.<span class="ident">accept</span>() {
+                <span class="prelude-val">Ok</span>((<span class="ident">io</span>, <span class="ident">addr</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">Conn</span> {
                         <span class="ident">io</span>,
                         <span class="ident">token</span>: <span class="ident">info</span>.<span class="ident">token</span>,
                         <span class="ident">peer</span>: <span class="prelude-val">Some</span>(<span class="ident">addr</span>),
-                    },
-                    <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
-                    <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
-                    <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">connection_error</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">continue</span>,
-                    <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="comment">// deregister listener temporary</span>
-                        <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Error accepting connection: {}&quot;</span>, <span class="ident">e</span>);
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">deregister</span>(<span class="ident">info</span>) {
-                            <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Can not deregister server socket {}&quot;</span>, <span class="ident">err</span>);
-                        }
-
-                        <span class="comment">// sleep after error. write the timeout to socket info as later</span>
-                        <span class="comment">// the poll would need it mark which socket and when it&#39;s</span>
-                        <span class="comment">// listener should be registered</span>
-                        <span class="ident">info</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">500</span>));
-
-                        <span class="comment">// after the sleep a Timer interest is sent to Accept Poll</span>
-                        <span class="kw">let</span> <span class="ident">waker</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">waker</span>.<span class="ident">clone</span>();
-                        <span class="ident">System</span>::<span class="ident">current</span>().<span class="ident">arbiter</span>().<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                            <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">510</span>)).<span class="kw">await</span>;
-                            <span class="ident">waker</span>.<span class="ident">wake</span>(<span class="ident">WakerInterest</span>::<span class="ident">Timer</span>);
-                        });
-
-                        <span class="kw">return</span>;
-                    }
+                    };
+                    <span class="self">self</span>.<span class="ident">accept_one</span>(<span class="ident">sockets</span>, <span class="ident">msg</span>);
                 }
-            } <span class="kw">else</span> {
-                <span class="kw">return</span>;
-            };
+                <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">connection_error</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">continue</span>,
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Error accepting connection: {}&quot;</span>, <span class="ident">e</span>);
 
-            <span class="self">self</span>.<span class="ident">accept_one</span>(<span class="ident">sockets</span>, <span class="ident">msg</span>);
+                    <span class="comment">// deregister listener temporary</span>
+                    <span class="self">self</span>.<span class="ident">deregister_logged</span>(<span class="ident">info</span>);
+
+                    <span class="comment">// sleep after error. write the timeout to socket info as later</span>
+                    <span class="comment">// the poll would need it mark which socket and when it&#39;s</span>
+                    <span class="comment">// listener should be registered</span>
+                    <span class="ident">info</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">500</span>));
+
+                    <span class="comment">// after the sleep a Timer interest is sent to Accept Poll</span>
+                    <span class="kw">let</span> <span class="ident">waker</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">waker</span>.<span class="ident">clone</span>();
+                    <span class="ident">System</span>::<span class="ident">current</span>().<span class="ident">arbiter</span>().<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+                        <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">510</span>)).<span class="kw">await</span>;
+                        <span class="ident">waker</span>.<span class="ident">wake</span>(<span class="ident">WakerInterest</span>::<span class="ident">Timer</span>);
+                    });
+
+                    <span class="kw">return</span>;
+                }
+            };
         }
     }
 }

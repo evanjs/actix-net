@@ -296,15 +296,15 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">MioStream</span>, <span class="ident">SocketAddr</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">MioStream</span>, <span class="ident">SocketAddr</span>)<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">MioListener</span>::<span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="ident">lst</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">lst</span>
                 .<span class="ident">accept</span>()
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="ident">addr</span>)<span class="op">|</span> <span class="prelude-val">Some</span>((<span class="ident">MioStream</span>::<span class="ident">Tcp</span>(<span class="ident">stream</span>), <span class="ident">SocketAddr</span>::<span class="ident">Tcp</span>(<span class="ident">addr</span>)))),
+                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="ident">addr</span>)<span class="op">|</span> (<span class="ident">MioStream</span>::<span class="ident">Tcp</span>(<span class="ident">stream</span>), <span class="ident">SocketAddr</span>::<span class="ident">Tcp</span>(<span class="ident">addr</span>))),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
             <span class="ident">MioListener</span>::<span class="ident">Uds</span>(<span class="kw-2">ref</span> <span class="ident">lst</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">lst</span>
                 .<span class="ident">accept</span>()
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="ident">addr</span>)<span class="op">|</span> <span class="prelude-val">Some</span>((<span class="ident">MioStream</span>::<span class="ident">Uds</span>(<span class="ident">stream</span>), <span class="ident">SocketAddr</span>::<span class="ident">Uds</span>(<span class="ident">addr</span>)))),
+                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="ident">addr</span>)<span class="op">|</span> (<span class="ident">MioStream</span>::<span class="ident">Uds</span>(<span class="ident">stream</span>), <span class="ident">SocketAddr</span>::<span class="ident">Uds</span>(<span class="ident">addr</span>))),
         }
     }
 }
