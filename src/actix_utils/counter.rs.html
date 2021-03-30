@@ -85,12 +85,12 @@
 <span id="84">84</span>
 <span id="85">85</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">cell</span>::<span class="ident">Cell</span>;
-<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">task</span>;
+<span class="doccomment">//! Task-notifying counter.</span>
 
+<span class="kw">use</span> <span class="ident">core</span>::{<span class="ident">cell</span>::<span class="ident">Cell</span>, <span class="ident">task</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">task</span>::<span class="ident">LocalWaker</span>;
+<span class="kw">use</span> <span class="ident">local_waker</span>::<span class="ident">LocalWaker</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="doccomment">/// Simple counter with ability to notify task on reaching specific number</span>
