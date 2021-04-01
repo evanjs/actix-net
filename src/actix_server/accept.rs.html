@@ -426,6 +426,13 @@
 <span id="425">425</span>
 <span id="426">426</span>
 <span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">thread</span>};
@@ -616,21 +623,19 @@
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">waker</span>.<span class="ident">guard</span>();
                         <span class="kw">match</span> <span class="ident">guard</span>.<span class="ident">pop_front</span>() {
                             <span class="comment">// worker notify it becomes available. we may want to recover</span>
-                            <span class="comment">// from  backpressure.</span>
+                            <span class="comment">// from backpressure.</span>
                             <span class="prelude-val">Some</span>(<span class="ident">WakerInterest</span>::<span class="ident">WorkerAvailable</span>) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">drop</span>(<span class="ident">guard</span>);
                                 <span class="self">self</span>.<span class="ident">maybe_backpressure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sockets</span>, <span class="bool-val">false</span>);
                             }
-                            <span class="comment">// a new worker thread is made and it&#39;s handle would be added</span>
-                            <span class="comment">// to Accept</span>
+                            <span class="comment">// a new worker thread is made and it&#39;s handle would be added to Accept</span>
                             <span class="prelude-val">Some</span>(<span class="ident">WakerInterest</span>::<span class="ident">Worker</span>(<span class="ident">handle</span>)) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">drop</span>(<span class="ident">guard</span>);
                                 <span class="comment">// maybe we want to recover from a backpressure.</span>
                                 <span class="self">self</span>.<span class="ident">maybe_backpressure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sockets</span>, <span class="bool-val">false</span>);
                                 <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">push</span>(<span class="ident">handle</span>);
                             }
-                            <span class="comment">// got timer interest and it&#39;s time to try register socket(s)</span>
-                            <span class="comment">// again.</span>
+                            <span class="comment">// got timer interest and it&#39;s time to try register socket(s) again</span>
                             <span class="prelude-val">Some</span>(<span class="ident">WakerInterest</span>::<span class="ident">Timer</span>) <span class="op">=</span><span class="op">&gt;</span> {
                                 <span class="ident">drop</span>(<span class="ident">guard</span>);
                                 <span class="self">self</span>.<span class="ident">process_timer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sockets</span>)
@@ -667,16 +672,23 @@
 
     <span class="kw">fn</span> <span class="ident">process_timer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">Instant</span>::<span class="ident">now</span>();
-        <span class="ident">sockets</span>.<span class="ident">iter_mut</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">token</span>, <span class="ident">info</span>)<span class="op">|</span> {
-            <span class="comment">// only the ServerSocketInfo have an associate timeout value was de registered.</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">inst</span>) <span class="op">=</span> <span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">take</span>() {
-                <span class="kw">if</span> <span class="ident">now</span> <span class="op">&gt;</span> <span class="ident">inst</span> {
-                    <span class="self">self</span>.<span class="ident">register_logged</span>(<span class="ident">token</span>, <span class="ident">info</span>);
-                } <span class="kw">else</span> {
+        <span class="ident">sockets</span>
+            .<span class="ident">iter_mut</span>()
+            <span class="comment">// Only sockets that had an associated timeout were deregistered.</span>
+            .<span class="ident">filter</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> <span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">is_some</span>())
+            .<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">token</span>, <span class="ident">info</span>)<span class="op">|</span> {
+                <span class="kw">let</span> <span class="ident">inst</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+
+                <span class="kw">if</span> <span class="ident">now</span> <span class="op">&lt;</span> <span class="ident">inst</span> {
                     <span class="ident">info</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">inst</span>);
+                } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">backpressure</span> {
+                    <span class="self">self</span>.<span class="ident">register_logged</span>(<span class="ident">token</span>, <span class="ident">info</span>);
                 }
-            }
-        });
+
+                <span class="comment">// Drop the timeout if server is in backpressure and socket timeout is expired.</span>
+                <span class="comment">// When server recovers from backpressure it will register all sockets without</span>
+                <span class="comment">// a timeout value so this socket register will be delayed till then.</span>
+            });
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>))]</span>
@@ -730,87 +742,90 @@
     }
 
     <span class="kw">fn</span> <span class="ident">maybe_backpressure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>, <span class="ident">on</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">backpressure</span> {
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">on</span> {
+        <span class="comment">// Only operate when server is in a different backpressure than the given flag.</span>
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">!</span><span class="op">=</span> <span class="ident">on</span> {
+            <span class="kw">if</span> <span class="ident">on</span> {
+                <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                <span class="comment">// TODO: figure out if timing out sockets can be safely de-registered twice.</span>
+                <span class="self">self</span>.<span class="ident">deregister_all</span>(<span class="ident">sockets</span>);
+            } <span class="kw">else</span> {
                 <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="kw">for</span> (<span class="ident">token</span>, <span class="ident">info</span>) <span class="kw">in</span> <span class="ident">sockets</span>.<span class="ident">iter_mut</span>() {
-                    <span class="kw">if</span> <span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">is_some</span>() {
-                        <span class="comment">// socket will attempt to re-register itself when its timeout completes</span>
-                        <span class="kw">continue</span>;
-                    }
-                    <span class="self">self</span>.<span class="ident">register_logged</span>(<span class="ident">token</span>, <span class="ident">info</span>);
-                }
+                <span class="ident">sockets</span>
+                    .<span class="ident">iter_mut</span>()
+                    <span class="comment">// Only operate on sockets without associated timeout.</span>
+                    <span class="comment">// Sockets with it will attempt to re-register when their timeout expires.</span>
+                    .<span class="ident">filter</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> <span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">is_none</span>())
+                    .<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">token</span>, <span class="ident">info</span>)<span class="op">|</span> <span class="self">self</span>.<span class="ident">register_logged</span>(<span class="ident">token</span>, <span class="ident">info</span>));
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">on</span> {
-            <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">=</span> <span class="bool-val">true</span>;
-            <span class="self">self</span>.<span class="ident">deregister_all</span>(<span class="ident">sockets</span>);
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">accept_one</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>, <span class="kw-2">mut</span> <span class="ident">msg</span>: <span class="ident">Conn</span>) {
+    <span class="kw">fn</span> <span class="ident">accept_one</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>, <span class="kw-2">mut</span> <span class="ident">conn</span>: <span class="ident">Conn</span>) {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">backpressure</span> {
+            <span class="comment">// send_connection would remove fault worker from handles.</span>
+            <span class="comment">// worst case here is conn get dropped after all handles are gone.</span>
             <span class="kw">while</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">is_empty</span>() {
-                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">send</span>(<span class="ident">msg</span>) {
-                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="self">self</span>.<span class="ident">set_next</span>();
-                        <span class="kw">break</span>;
-                    }
-                    <span class="prelude-val">Err</span>(<span class="ident">tmp</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="comment">// worker lost contact and could be gone. a message is sent to</span>
-                        <span class="comment">// `ServerBuilder` future to notify it a new worker should be made</span>
-                        <span class="comment">// after that remove the fault worker</span>
-                        <span class="self">self</span>.<span class="ident">srv</span>.<span class="ident">worker_faulted</span>(<span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">idx</span>);
-                        <span class="ident">msg</span> <span class="op">=</span> <span class="ident">tmp</span>;
-                        <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">swap_remove</span>(<span class="self">self</span>.<span class="ident">next</span>);
-                        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">is_empty</span>() {
-                            <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;No workers&quot;</span>);
-                            <span class="kw">return</span>;
-                        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span> {
-                            <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="number">0</span>;
-                        }
-                        <span class="kw">continue</span>;
-                    }
+                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">send_connection</span>(<span class="ident">sockets</span>, <span class="ident">conn</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                    <span class="prelude-val">Err</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">conn</span> <span class="op">=</span> <span class="ident">c</span>,
                 }
             }
         } <span class="kw">else</span> {
+            <span class="comment">// Do one round and try to send conn to all workers until it succeed.</span>
+            <span class="comment">// Start from self.next.</span>
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">while</span> <span class="ident">idx</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">len</span>() {
                 <span class="ident">idx</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">available</span>() {
-                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">send</span>(<span class="ident">msg</span>) {
-                        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">set_next</span>();
-                            <span class="kw">return</span>;
-                        }
-                        <span class="comment">// worker lost contact and could be gone. a message is sent to</span>
-                        <span class="comment">// `ServerBuilder` future to notify it a new worker should be made.</span>
-                        <span class="comment">// after that remove the fault worker and enter backpressure if necessary.</span>
-                        <span class="prelude-val">Err</span>(<span class="ident">tmp</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">srv</span>.<span class="ident">worker_faulted</span>(<span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">idx</span>);
-                            <span class="ident">msg</span> <span class="op">=</span> <span class="ident">tmp</span>;
-                            <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">swap_remove</span>(<span class="self">self</span>.<span class="ident">next</span>);
-                            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">is_empty</span>() {
-                                <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;No workers&quot;</span>);
-                                <span class="self">self</span>.<span class="ident">maybe_backpressure</span>(<span class="ident">sockets</span>, <span class="bool-val">true</span>);
-                                <span class="kw">return</span>;
-                            } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span> {
-                                <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="number">0</span>;
-                            }
-                            <span class="kw">continue</span>;
-                        }
+                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">send_connection</span>(<span class="ident">sockets</span>, <span class="ident">conn</span>) {
+                        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+                        <span class="prelude-val">Err</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">conn</span> <span class="op">=</span> <span class="ident">c</span>,
                     }
+                } <span class="kw">else</span> {
+                    <span class="self">self</span>.<span class="ident">set_next</span>();
                 }
-                <span class="self">self</span>.<span class="ident">set_next</span>();
             }
-            <span class="comment">// enable backpressure</span>
+            <span class="comment">// Sending Conn failed due to either all workers are in error or not available.</span>
+            <span class="comment">// Enter backpressure state and try again.</span>
             <span class="self">self</span>.<span class="ident">maybe_backpressure</span>(<span class="ident">sockets</span>, <span class="bool-val">true</span>);
-            <span class="self">self</span>.<span class="ident">accept_one</span>(<span class="ident">sockets</span>, <span class="ident">msg</span>);
+            <span class="self">self</span>.<span class="ident">accept_one</span>(<span class="ident">sockets</span>, <span class="ident">conn</span>);
         }
     }
 
-    <span class="comment">// set next worker handle that would accept work.</span>
+    <span class="comment">// Set next worker handle that would accept work.</span>
     <span class="kw">fn</span> <span class="ident">set_next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">next</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">%</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">len</span>();
+    }
+
+    <span class="comment">// Send connection to worker and handle error.</span>
+    <span class="kw">fn</span> <span class="ident">send_connection</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>,
+        <span class="ident">conn</span>: <span class="ident">Conn</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Conn</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">send</span>(<span class="ident">conn</span>) {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="self">self</span>.<span class="ident">set_next</span>();
+                <span class="prelude-val">Ok</span>(())
+            }
+            <span class="prelude-val">Err</span>(<span class="ident">conn</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="comment">// worker lost contact and could be gone. a message is sent to</span>
+                <span class="comment">// `ServerBuilder` future to notify it a new worker should be made.</span>
+                <span class="comment">// after that remove the fault worker and enter backpressure if necessary.</span>
+                <span class="self">self</span>.<span class="ident">srv</span>.<span class="ident">worker_faulted</span>(<span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">idx</span>);
+                <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">swap_remove</span>(<span class="self">self</span>.<span class="ident">next</span>);
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">is_empty</span>() {
+                    <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;No workers&quot;</span>);
+                    <span class="self">self</span>.<span class="ident">maybe_backpressure</span>(<span class="ident">sockets</span>, <span class="bool-val">true</span>);
+                    <span class="comment">// All workers are gone and Conn is nowhere to be sent.</span>
+                    <span class="comment">// Treat this situation as Ok and drop Conn.</span>
+                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+                } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span> {
+                    <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="number">0</span>;
+                }
+                <span class="prelude-val">Err</span>(<span class="ident">conn</span>)
+            }
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>, <span class="ident">token</span>: <span class="ident">usize</span>) {
@@ -820,11 +835,10 @@
                 .<span class="ident">expect</span>(<span class="string">&quot;ServerSocketInfo is removed from Slab&quot;</span>);
 
             <span class="kw">match</span> <span class="ident">info</span>.<span class="ident">lst</span>.<span class="ident">accept</span>() {
-                <span class="prelude-val">Ok</span>((<span class="ident">io</span>, <span class="ident">addr</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">io</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">Conn</span> {
                         <span class="ident">io</span>,
                         <span class="ident">token</span>: <span class="ident">info</span>.<span class="ident">token</span>,
-                        <span class="ident">peer</span>: <span class="prelude-val">Some</span>(<span class="ident">addr</span>),
                     };
                     <span class="self">self</span>.<span class="ident">accept_one</span>(<span class="ident">sockets</span>, <span class="ident">msg</span>);
                 }

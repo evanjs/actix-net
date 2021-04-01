@@ -249,10 +249,6 @@
 <span id="248">248</span>
 <span id="249">249</span>
 <span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::{
     <span class="ident">SocketAddr</span> <span class="kw">as</span> <span class="ident">StdSocketAddr</span>, <span class="ident">TcpListener</span> <span class="kw">as</span> <span class="ident">StdTcpListener</span>, <span class="ident">ToSocketAddrs</span>,
@@ -296,15 +292,11 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">MioStream</span>, <span class="ident">SocketAddr</span>)<span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MioStream</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">MioListener</span>::<span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="ident">lst</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">lst</span>
-                .<span class="ident">accept</span>()
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="ident">addr</span>)<span class="op">|</span> (<span class="ident">MioStream</span>::<span class="ident">Tcp</span>(<span class="ident">stream</span>), <span class="ident">SocketAddr</span>::<span class="ident">Tcp</span>(<span class="ident">addr</span>))),
+            <span class="ident">MioListener</span>::<span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="ident">lst</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">lst</span>.<span class="ident">accept</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">MioStream</span>::<span class="ident">Tcp</span>(<span class="ident">stream</span>)),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
-            <span class="ident">MioListener</span>::<span class="ident">Uds</span>(<span class="kw-2">ref</span> <span class="ident">lst</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">lst</span>
-                .<span class="ident">accept</span>()
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="ident">addr</span>)<span class="op">|</span> (<span class="ident">MioStream</span>::<span class="ident">Uds</span>(<span class="ident">stream</span>), <span class="ident">SocketAddr</span>::<span class="ident">Uds</span>(<span class="ident">addr</span>))),
+            <span class="ident">MioListener</span>::<span class="ident">Uds</span>(<span class="kw-2">ref</span> <span class="ident">lst</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">lst</span>.<span class="ident">accept</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stream</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">MioStream</span>::<span class="ident">Uds</span>(<span class="ident">stream</span>)),
         }
     }
 }
