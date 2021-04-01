@@ -263,7 +263,7 @@
 <span class="kw">use</span> <span class="ident">actix_service</span>::{
     <span class="ident">apply</span>, <span class="ident">ApplyTransform</span>, <span class="ident">IntoServiceFactory</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>, <span class="ident">Transform</span>,
 };
-<span class="kw">use</span> <span class="ident">futures_util</span>::<span class="ident">future</span>::{<span class="ident">ok</span>, <span class="ident">Either</span>, <span class="ident">Ready</span>};
+<span class="kw">use</span> <span class="ident">actix_utils</span>::<span class="ident">future</span>::{<span class="ident">ok</span>, <span class="ident">Either</span>, <span class="ident">Ready</span>};
 <span class="kw">use</span> <span class="ident">tracing_futures</span>::{<span class="ident">Instrument</span>, <span class="ident">Instrumented</span>};
 
 <span class="doccomment">/// A `Service` implementation that automatically enters/exits tracing spans</span>
@@ -302,9 +302,9 @@
             .<span class="ident">clone</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">span</span><span class="op">|</span> <span class="ident">tracing</span>::<span class="macro">span</span><span class="macro">!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="ident">tracing</span>::<span class="ident">Level</span>::<span class="ident">INFO</span>, <span class="string">&quot;future&quot;</span>))
         {
-            <span class="ident">Either</span>::<span class="ident">Right</span>(<span class="ident">fut</span>.<span class="ident">instrument</span>(<span class="ident">span</span>))
+            <span class="ident">Either</span>::<span class="ident">right</span>(<span class="ident">fut</span>.<span class="ident">instrument</span>(<span class="ident">span</span>))
         } <span class="kw">else</span> {
-            <span class="ident">Either</span>::<span class="ident">Left</span>(<span class="ident">fut</span>)
+            <span class="ident">Either</span>::<span class="ident">left</span>(<span class="ident">fut</span>)
         }
     }
 }
