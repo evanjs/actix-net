@@ -472,16 +472,6 @@
 <span id="471">471</span>
 <span id="472">472</span>
 <span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">future</span>::<span class="ident">Future</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">pin</span>::<span class="ident">Pin</span>;
@@ -493,7 +483,7 @@
 <span class="kw">use</span> <span class="ident">actix_rt</span>::<span class="ident">time</span>::{<span class="ident">sleep</span>, <span class="ident">Sleep</span>};
 <span class="kw">use</span> <span class="ident">actix_rt</span>::{<span class="ident">spawn</span>, <span class="ident">Arbiter</span>};
 <span class="kw">use</span> <span class="ident">actix_utils</span>::<span class="ident">counter</span>::<span class="ident">Counter</span>;
-<span class="kw">use</span> <span class="ident">futures_core</span>::<span class="ident">future</span>::<span class="ident">LocalBoxFuture</span>;
+<span class="kw">use</span> <span class="ident">futures_core</span>::{<span class="ident">future</span>::<span class="ident">LocalBoxFuture</span>, <span class="ident">ready</span>};
 <span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">trace</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">mpsc</span>::{<span class="ident">unbounded_channel</span>, <span class="ident">UnboundedReceiver</span>, <span class="ident">UnboundedSender</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">oneshot</span>;
@@ -748,19 +738,16 @@
     }
 
     <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">force</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="ident">force</span> {
-            <span class="self">self</span>.<span class="ident">services</span>.<span class="ident">iter_mut</span>().<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">srv</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">srv</span>.<span class="ident">status</span> <span class="op">=</span><span class="op">=</span> <span class="ident">WorkerServiceStatus</span>::<span class="ident">Available</span> {
-                    <span class="ident">srv</span>.<span class="ident">status</span> <span class="op">=</span> <span class="ident">WorkerServiceStatus</span>::<span class="ident">Stopped</span>;
-                }
+        <span class="self">self</span>.<span class="ident">services</span>
+            .<span class="ident">iter_mut</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">srv</span><span class="op">|</span> <span class="ident">srv</span>.<span class="ident">status</span> <span class="op">=</span><span class="op">=</span> <span class="ident">WorkerServiceStatus</span>::<span class="ident">Available</span>)
+            .<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">srv</span><span class="op">|</span> {
+                <span class="ident">srv</span>.<span class="ident">status</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">force</span> {
+                    <span class="ident">WorkerServiceStatus</span>::<span class="ident">Stopped</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">WorkerServiceStatus</span>::<span class="ident">Stopping</span>
+                };
             });
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">services</span>.<span class="ident">iter_mut</span>().<span class="ident">for_each</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">srv</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">srv</span>.<span class="ident">status</span> <span class="op">=</span><span class="op">=</span> <span class="ident">WorkerServiceStatus</span>::<span class="ident">Available</span> {
-                    <span class="ident">srv</span>.<span class="ident">status</span> <span class="op">=</span> <span class="ident">WorkerServiceStatus</span>::<span class="ident">Stopping</span>;
-                }
-            });
-        }
     }
 
     <span class="kw">fn</span> <span class="ident">check_readiness</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, (<span class="ident">Token</span>, <span class="ident">usize</span>)<span class="op">&gt;</span> {
@@ -841,18 +828,12 @@
                 <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(());
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">graceful</span> {
                 <span class="self">self</span>.<span class="ident">shutdown</span>(<span class="bool-val">false</span>);
-                <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">num_connections</span>();
-                <span class="kw">if</span> <span class="ident">num</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                    <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Graceful worker shutdown, {} connections&quot;</span>, <span class="ident">num</span>);
-                    <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WorkerState</span>::<span class="ident">Shutdown</span>(
-                        <span class="ident">Box</span>::<span class="ident">pin</span>(<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>))),
-                        <span class="ident">Box</span>::<span class="ident">pin</span>(<span class="ident">sleep</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shutdown_timeout</span>)),
-                        <span class="prelude-val">Some</span>(<span class="ident">result</span>),
-                    );
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">send</span>(<span class="bool-val">true</span>);
-                    <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(());
-                }
+                <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Graceful worker shutdown, {} connections&quot;</span>, <span class="ident">num</span>);
+                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WorkerState</span>::<span class="ident">Shutdown</span>(
+                    <span class="ident">Box</span>::<span class="ident">pin</span>(<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>))),
+                    <span class="ident">Box</span>::<span class="ident">pin</span>(<span class="ident">sleep</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shutdown_timeout</span>)),
+                    <span class="prelude-val">Some</span>(<span class="ident">result</span>),
+                );
             } <span class="kw">else</span> {
                 <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Force shutdown worker, {} connections&quot;</span>, <span class="ident">num</span>);
                 <span class="self">self</span>.<span class="ident">shutdown</span>(<span class="bool-val">true</span>);
@@ -951,16 +932,15 @@
                     }
                 }
 
-                <span class="kw">match</span> <span class="ident">Pin</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">rx</span>).<span class="ident">poll_recv</span>(<span class="ident">cx</span>) {
+                <span class="kw">match</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">Pin</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">rx</span>).<span class="ident">poll_recv</span>(<span class="ident">cx</span>)) {
                     <span class="comment">// handle incoming io stream</span>
-                    <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Some</span>(<span class="ident">WorkerCommand</span>(<span class="ident">msg</span>))) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="prelude-val">Some</span>(<span class="ident">WorkerCommand</span>(<span class="ident">msg</span>)) <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">conns</span>.<span class="ident">get</span>();
                         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">services</span>[<span class="ident">msg</span>.<span class="ident">token</span>.<span class="number">0</span>]
                             .<span class="ident">service</span>
                             .<span class="ident">call</span>((<span class="prelude-val">Some</span>(<span class="ident">guard</span>), <span class="ident">msg</span>.<span class="ident">io</span>));
                     }
-                    <span class="ident">Poll</span>::<span class="ident">Pending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Pending</span>,
-                    <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">None</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(()),
+                    <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(()),
                 };
             },
         }
