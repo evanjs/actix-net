@@ -862,27 +862,27 @@
                 }
             },
             <span class="ident">WorkerState</span>::<span class="ident">Restarting</span>(<span class="ident">idx</span>, <span class="ident">token</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">fut</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">match</span> <span class="ident">fut</span>.<span class="ident">as_mut</span>().<span class="ident">poll</span>(<span class="ident">cx</span>) {
-                    <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">item</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="comment">// only interest in the first item?</span>
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">token</span>, <span class="ident">service</span>)) <span class="op">=</span> <span class="ident">item</span>.<span class="ident">into_iter</span>().<span class="ident">next</span>() {
-                            <span class="macro">trace</span><span class="macro">!</span>(
-                                <span class="string">&quot;Service {:?} has been restarted&quot;</span>,
-                                <span class="self">self</span>.<span class="ident">factories</span>[<span class="ident">idx</span>].<span class="ident">name</span>(<span class="ident">token</span>)
-                            );
-                            <span class="self">self</span>.<span class="ident">services</span>[<span class="ident">token</span>.<span class="number">0</span>].<span class="ident">created</span>(<span class="ident">service</span>);
-                            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WorkerState</span>::<span class="ident">Unavailable</span>;
-                            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">poll</span>(<span class="ident">cx</span>);
-                        }
-                    }
-                    <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Err</span>(<span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="macro">panic</span><span class="macro">!</span>(
-                            <span class="string">&quot;Can not restart {:?} service&quot;</span>,
-                            <span class="self">self</span>.<span class="ident">factories</span>[<span class="ident">idx</span>].<span class="ident">name</span>(<span class="ident">token</span>)
-                        );
-                    }
-                    <span class="ident">Poll</span>::<span class="ident">Pending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Pending</span>,
-                }
+                <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">fut</span>.<span class="ident">as_mut</span>().<span class="ident">poll</span>(<span class="ident">cx</span>)).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+                    <span class="macro">panic</span><span class="macro">!</span>(
+                        <span class="string">&quot;Can not restart {:?} service&quot;</span>,
+                        <span class="self">self</span>.<span class="ident">factories</span>[<span class="ident">idx</span>].<span class="ident">name</span>(<span class="ident">token</span>)
+                    )
+                });
+
+                <span class="comment">// Only interest in the first item?</span>
+                <span class="kw">let</span> (<span class="ident">token</span>, <span class="ident">service</span>) <span class="op">=</span> <span class="ident">item</span>
+                    .<span class="ident">into_iter</span>()
+                    .<span class="ident">next</span>()
+                    .<span class="ident">expect</span>(<span class="string">&quot;No BoxedServerService. Restarting can not progress&quot;</span>);
+
+                <span class="macro">trace</span><span class="macro">!</span>(
+                    <span class="string">&quot;Service {:?} has been restarted&quot;</span>,
+                    <span class="self">self</span>.<span class="ident">factories</span>[<span class="ident">idx</span>].<span class="ident">name</span>(<span class="ident">token</span>)
+                );
+
+                <span class="self">self</span>.<span class="ident">services</span>[<span class="ident">token</span>.<span class="number">0</span>].<span class="ident">created</span>(<span class="ident">service</span>);
+                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">WorkerState</span>::<span class="ident">Unavailable</span>;
+
                 <span class="self">self</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)
             }
             <span class="ident">WorkerState</span>::<span class="ident">Shutdown</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">t1</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">t2</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">tx</span>) <span class="op">=</span><span class="op">&gt;</span> {
