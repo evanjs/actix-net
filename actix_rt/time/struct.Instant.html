@@ -41,8 +41,8 @@ None if that instant is later than this one.</p>
     <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">Instant</span>::<span class="ident">now</span>();
     <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">new</span>(<span class="number">1</span>, <span class="number">0</span>)).<span class="kw">await</span>;
     <span class="kw">let</span> <span class="ident">new_now</span> <span class="op">=</span> <span class="ident">Instant</span>::<span class="ident">now</span>();
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">new_now</span>.<span class="ident">checked_duration_since</span>(<span class="ident">now</span>));
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">now</span>.<span class="ident">checked_duration_since</span>(<span class="ident">new_now</span>)); <span class="comment">// None</span>
+    <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">new_now</span>.<span class="ident">checked_duration_since</span>(<span class="ident">now</span>));
+    <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">now</span>.<span class="ident">checked_duration_since</span>(<span class="ident">new_now</span>)); <span class="comment">// None</span>
 }</pre></div>
 </div><h4 id="method.saturating_duration_since" class="method"><code>pub fn <a href="#method.saturating_duration_since" class="fnname">saturating_duration_since</a>(&amp;self, earlier: <a class="struct" href="../../actix_rt/time/struct.Instant.html" title="struct actix_rt::time::Instant">Instant</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/time/struct.Duration.html" title="struct core::time::Duration">Duration</a></code></h4><div class="docblock"><p>Returns the amount of time elapsed from another instant to this one, or
 zero duration if that instant is earlier than this one.</p>
@@ -55,8 +55,8 @@ zero duration if that instant is earlier than this one.</p>
     <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">Instant</span>::<span class="ident">now</span>();
     <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">new</span>(<span class="number">1</span>, <span class="number">0</span>)).<span class="kw">await</span>;
     <span class="kw">let</span> <span class="ident">new_now</span> <span class="op">=</span> <span class="ident">Instant</span>::<span class="ident">now</span>();
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">new_now</span>.<span class="ident">saturating_duration_since</span>(<span class="ident">now</span>));
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">now</span>.<span class="ident">saturating_duration_since</span>(<span class="ident">new_now</span>)); <span class="comment">// 0ns</span>
+    <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">new_now</span>.<span class="ident">saturating_duration_since</span>(<span class="ident">now</span>));
+    <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">now</span>.<span class="ident">saturating_duration_since</span>(<span class="ident">new_now</span>)); <span class="comment">// 0ns</span>
 }</pre></div>
 </div><h4 id="method.elapsed" class="method"><code>pub fn <a href="#method.elapsed" class="fnname">elapsed</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/time/struct.Duration.html" title="struct core::time::Duration">Duration</a></code></h4><div class="docblock"><p>Returns the amount of time elapsed since this instant was created.</p>
 <h1 id="panics-1" class="section-header"><a href="#panics-1">Panics</a></h1>
@@ -72,7 +72,7 @@ produced synthetically.</p>
     <span class="kw">let</span> <span class="ident">instant</span> <span class="op">=</span> <span class="ident">Instant</span>::<span class="ident">now</span>();
     <span class="kw">let</span> <span class="ident">three_secs</span> <span class="op">=</span> <span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">3</span>);
     <span class="ident">sleep</span>(<span class="ident">three_secs</span>).<span class="kw">await</span>;
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">instant</span>.<span class="ident">elapsed</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">three_secs</span>);
+    <span class="macro">assert!</span>(<span class="ident">instant</span>.<span class="ident">elapsed</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">three_secs</span>);
 }</pre></div>
 </div><h4 id="method.checked_add" class="method"><code>pub fn <a href="#method.checked_add" class="fnname">checked_add</a>(&amp;self, duration: <a class="struct" href="https://doc.rust-lang.org/nightly/core/time/struct.Duration.html" title="struct core::time::Duration">Duration</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../../actix_rt/time/struct.Instant.html" title="struct actix_rt::time::Instant">Instant</a>&gt;</code></h4><div class="docblock"><p>Returns <code>Some(t)</code> where <code>t</code> is the time <code>self + duration</code> if <code>t</code> can be
 represented as <code>Instant</code> (which means it’s inside the bounds of the

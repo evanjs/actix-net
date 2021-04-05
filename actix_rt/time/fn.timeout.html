@@ -21,7 +21,7 @@ consumes the <code>Timeout</code>.</p>
 
 <span class="comment">// Wrap the future with a `Timeout` set to expire in 10 milliseconds.</span>
 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">timeout</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">10</span>), <span class="ident">rx</span>).<span class="kw">await</span> {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;did not receive value within 10 ms&quot;</span>);
+    <span class="macro">println!</span>(<span class="string">&quot;did not receive value within 10 ms&quot;</span>);
 }</pre></div>
 </div></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="actix_rt" data-search-js="../../search-index.js"></div>
     <script src="../../main.js"></script></body></html>

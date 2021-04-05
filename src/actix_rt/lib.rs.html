@@ -273,13 +273,13 @@
     <span class="kw">impl</span> <span class="ident">ActixStream</span> <span class="kw">for</span> <span class="ident">TcpStream</span> {
         <span class="kw">fn</span> <span class="ident">poll_read_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Ready</span><span class="op">&gt;</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ready</span>(<span class="ident">Interest</span>::<span class="ident">READABLE</span>);
-            <span class="ident">tokio</span>::<span class="macro">pin</span><span class="macro">!</span>(<span class="ident">ready</span>);
+            <span class="ident">tokio</span>::<span class="macro">pin!</span>(<span class="ident">ready</span>);
             <span class="ident">ready</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)
         }
 
         <span class="kw">fn</span> <span class="ident">poll_write_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Ready</span><span class="op">&gt;</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ready</span>(<span class="ident">Interest</span>::<span class="ident">WRITABLE</span>);
-            <span class="ident">tokio</span>::<span class="macro">pin</span><span class="macro">!</span>(<span class="ident">ready</span>);
+            <span class="ident">tokio</span>::<span class="macro">pin!</span>(<span class="ident">ready</span>);
             <span class="ident">ready</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)
         }
     }
@@ -288,13 +288,13 @@
     <span class="kw">impl</span> <span class="ident">ActixStream</span> <span class="kw">for</span> <span class="ident">UnixStream</span> {
         <span class="kw">fn</span> <span class="ident">poll_read_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Ready</span><span class="op">&gt;</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ready</span>(<span class="ident">Interest</span>::<span class="ident">READABLE</span>);
-            <span class="ident">tokio</span>::<span class="macro">pin</span><span class="macro">!</span>(<span class="ident">ready</span>);
+            <span class="ident">tokio</span>::<span class="macro">pin!</span>(<span class="ident">ready</span>);
             <span class="ident">ready</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)
         }
 
         <span class="kw">fn</span> <span class="ident">poll_write_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Ready</span><span class="op">&gt;</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ready</span>(<span class="ident">Interest</span>::<span class="ident">WRITABLE</span>);
-            <span class="ident">tokio</span>::<span class="macro">pin</span><span class="macro">!</span>(<span class="ident">ready</span>);
+            <span class="ident">tokio</span>::<span class="macro">pin!</span>(<span class="ident">ready</span>);
             <span class="ident">ready</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)
         }
     }

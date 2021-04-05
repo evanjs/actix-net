@@ -402,7 +402,7 @@
     }
 }
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="kw">struct</span> <span class="ident">ApplyConfigServiceFactoryResponse</span><span class="op">&lt;</span><span class="ident">SF</span>, <span class="ident">Req</span>, <span class="ident">F</span>, <span class="ident">Cfg</span>, <span class="ident">Fut</span>, <span class="ident">S</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">SF</span>: <span class="ident">ServiceFactory</span><span class="op">&lt;</span><span class="ident">Req</span>, <span class="ident">Config</span> <span class="op">=</span> ()<span class="op">&gt;</span>,
@@ -418,7 +418,7 @@
     }
 }
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="attribute">#[<span class="ident">project</span> <span class="op">=</span> <span class="ident">StateProj</span>]</span>
     <span class="kw">enum</span> <span class="ident">State</span><span class="op">&lt;</span><span class="ident">SF</span>, <span class="ident">Fut</span>, <span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
@@ -449,12 +449,12 @@
 
         <span class="kw">match</span> <span class="ident">this</span>.<span class="ident">state</span>.<span class="ident">as_mut</span>().<span class="ident">project</span>() {
             <span class="ident">StateProj</span>::<span class="ident">A</span> { <span class="ident">fut</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">svc</span> <span class="op">=</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">fut</span>.<span class="ident">poll</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">svc</span> <span class="op">=</span> <span class="macro">ready!</span>(<span class="ident">fut</span>.<span class="ident">poll</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
                 <span class="ident">this</span>.<span class="ident">state</span>.<span class="ident">set</span>(<span class="ident">State</span>::<span class="ident">B</span> { <span class="ident">svc</span> });
                 <span class="self">self</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)
             }
             <span class="ident">StateProj</span>::<span class="ident">B</span> { <span class="ident">svc</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">svc</span>.<span class="ident">poll_ready</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
+                <span class="macro">ready!</span>(<span class="ident">svc</span>.<span class="ident">poll_ready</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
                 {
                     <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">f</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">store</span>;
                     <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">f</span>(<span class="ident">this</span>.<span class="ident">cfg</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>(), <span class="ident">svc</span>);

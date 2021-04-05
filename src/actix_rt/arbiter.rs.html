@@ -280,7 +280,7 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static</span> <span class="ident">COUNT</span>: <span class="ident">AtomicUsize</span> <span class="op">=</span> <span class="ident">AtomicUsize</span>::<span class="ident">new</span>(<span class="number">0</span>);
 
-<span class="macro">thread_local</span><span class="macro">!</span>(
+<span class="macro">thread_local!</span>(
     <span class="kw">static</span> <span class="ident">HANDLE</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ArbiterHandle</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>);
 );
 
@@ -292,8 +292,8 @@
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">ArbiterCommand</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ArbiterCommand</span>::<span class="ident">Stop</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;ArbiterCommand::Stop&quot;</span>),
-            <span class="ident">ArbiterCommand</span>::<span class="ident">Execute</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;ArbiterCommand::Execute&quot;</span>),
+            <span class="ident">ArbiterCommand</span>::<span class="ident">Stop</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;ArbiterCommand::Stop&quot;</span>),
+            <span class="ident">ArbiterCommand</span>::<span class="ident">Execute</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;ArbiterCommand::Execute&quot;</span>),
         }
     }
 }
@@ -379,7 +379,7 @@
         <span class="kw">let</span> <span class="ident">system_id</span> <span class="op">=</span> <span class="ident">sys</span>.<span class="ident">id</span>();
         <span class="kw">let</span> <span class="ident">arb_id</span> <span class="op">=</span> <span class="ident">COUNT</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>);
 
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;actix-rt|system:{}|arbiter:{}&quot;</span>, <span class="ident">system_id</span>, <span class="ident">arb_id</span>);
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;actix-rt|system:{}|arbiter:{}&quot;</span>, <span class="ident">system_id</span>, <span class="ident">arb_id</span>);
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">unbounded_channel</span>();
 
         <span class="kw">let</span> (<span class="ident">ready_tx</span>, <span class="ident">ready_rx</span>) <span class="op">=</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">mpsc</span>::<span class="ident">channel</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span>();
@@ -413,7 +413,7 @@
                 }
             })
             .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Cannot spawn Arbiter&#39;s thread: {:?}. {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">name</span>, <span class="ident">err</span>)
+                <span class="macro">panic!</span>(<span class="string">&quot;Cannot spawn Arbiter&#39;s thread: {:?}. {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">name</span>, <span class="ident">err</span>)
             });
 
         <span class="ident">ready_rx</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
@@ -446,7 +446,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ArbiterHandle</span> {
         <span class="ident">HANDLE</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">cell</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">cell</span>.<span class="ident">borrow</span>() {
             <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">hnd</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">hnd</span>.<span class="ident">clone</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Arbiter is not running.&quot;</span>),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;Arbiter is not running.&quot;</span>),
         })
     }
 
@@ -503,7 +503,7 @@
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Output</span><span class="op">&gt;</span> {
         <span class="comment">// process all items currently buffered in channel</span>
         <span class="kw">loop</span> {
-            <span class="kw">match</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">Pin</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">rx</span>).<span class="ident">poll_recv</span>(<span class="ident">cx</span>)) {
+            <span class="kw">match</span> <span class="macro">ready!</span>(<span class="ident">Pin</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">rx</span>).<span class="ident">poll_recv</span>(<span class="ident">cx</span>)) {
                 <span class="comment">// channel closed; no more messages can be received</span>
                 <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(()),
 

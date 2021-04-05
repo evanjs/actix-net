@@ -35,12 +35,12 @@ splitting.</p>
         <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="ident">stream</span>.<span class="ident">ready</span>(<span class="ident">Interest</span>::<span class="ident">READABLE</span> <span class="op">|</span> <span class="ident">Interest</span>::<span class="ident">WRITABLE</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="kw">if</span> <span class="ident">ready</span>.<span class="ident">is_readable</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>; <span class="number">1024</span>];
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">1024</span>];
             <span class="comment">// Try to read data, this may still fail with `WouldBlock`</span>
             <span class="comment">// if the readiness event is a false positive.</span>
             <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;read {} bytes&quot;</span>, <span class="ident">n</span>);        
+                    <span class="macro">println!</span>(<span class="string">&quot;read {} bytes&quot;</span>, <span class="ident">n</span>);        
                 }
                 <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">continue</span>;
@@ -57,7 +57,7 @@ splitting.</p>
             <span class="comment">// if the readiness event is a false positive.</span>
             <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_write</span>(<span class="string">b&quot;hello world&quot;</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;write {} bytes&quot;</span>, <span class="ident">n</span>);
+                    <span class="macro">println!</span>(<span class="string">&quot;write {} bytes&quot;</span>, <span class="ident">n</span>);
                 }
                 <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">continue</span>;
@@ -85,7 +85,7 @@ paired with <code>try_read()</code>.</p>
     <span class="kw">let</span> <span class="ident">bind_path</span> <span class="op">=</span> <span class="ident">dir</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;bind_path&quot;</span>);
     <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">UnixStream</span>::<span class="ident">connect</span>(<span class="ident">bind_path</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">msg</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>; <span class="number">1024</span>];
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">msg</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">1024</span>];
 
     <span class="kw">loop</span> {
         <span class="comment">// Wait for the socket to be readable</span>
@@ -107,7 +107,7 @@ paired with <code>try_read()</code>.</p>
         }
     }
 
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;GOT = {:?}&quot;</span>, <span class="ident">msg</span>);
+    <span class="macro">println!</span>(<span class="string">&quot;GOT = {:?}&quot;</span>, <span class="ident">msg</span>);
     <span class="prelude-val">Ok</span>(())
 }</pre></div>
 </div><h4 id="method.poll_read_ready" class="method"><code>pub fn <a href="#method.poll_read_ready" class="fnname">poll_read_ready</a>(&amp;self, cx: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/task/wake/struct.Context.html" title="struct core::task::wake::Context">Context</a>&lt;'_&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/task/poll/enum.Poll.html" title="enum core::task::poll::Poll">Poll</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;&gt;</code></h4><div class="docblock"><p>Polls for read readiness.</p>
@@ -169,7 +169,7 @@ and will no longer yield data. If the stream is not ready to read data
         <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>) {
             <span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
             <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;read {} bytes&quot;</span>, <span class="ident">n</span>);
+                <span class="macro">println!</span>(<span class="string">&quot;read {} bytes&quot;</span>, <span class="ident">n</span>);
             }
             <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">continue</span>;
@@ -218,7 +218,7 @@ and will no longer yield data. If the stream is not ready to read data
         <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_read_buf</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>) {
             <span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
             <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;read {} bytes&quot;</span>, <span class="ident">n</span>);
+                <span class="macro">println!</span>(<span class="string">&quot;read {} bytes&quot;</span>, <span class="ident">n</span>);
             }
             <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">continue</span>;

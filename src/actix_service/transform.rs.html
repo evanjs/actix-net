@@ -413,7 +413,7 @@
     }
 }
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ApplyTransformFuture</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">S</span>: <span class="ident">ServiceFactory</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
@@ -425,7 +425,7 @@
     }
 }
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="attribute">#[<span class="ident">project</span> <span class="op">=</span> <span class="ident">ApplyTransformFutureStateProj</span>]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ApplyTransformFutureState</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
@@ -449,7 +449,7 @@
 
         <span class="kw">match</span> <span class="ident">this</span>.<span class="ident">state</span>.<span class="ident">as_mut</span>().<span class="ident">project</span>() {
             <span class="ident">ApplyTransformFutureStateProj</span>::<span class="ident">A</span> { <span class="ident">fut</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">fut</span>.<span class="ident">poll</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="macro">ready!</span>(<span class="ident">fut</span>.<span class="ident">poll</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">store</span>.<span class="number">0</span>.<span class="ident">new_transform</span>(<span class="ident">srv</span>);
                 <span class="ident">this</span>.<span class="ident">state</span>.<span class="ident">set</span>(<span class="ident">ApplyTransformFutureState</span>::<span class="ident">B</span> { <span class="ident">fut</span> });
                 <span class="self">self</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)

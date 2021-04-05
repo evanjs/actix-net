@@ -12,11 +12,11 @@ on submitted futures.</p>
 
 <span class="comment">// Spawn a future onto the runtime</span>
 <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">rt</span>.<span class="ident">spawn</span>(<span class="kw">async</span> {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;running on the runtime&quot;</span>);
+    <span class="macro">println!</span>(<span class="string">&quot;running on the runtime&quot;</span>);
     <span class="number">42</span>
 });
 
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">rt</span>.<span class="ident">block_on</span>(<span class="ident">handle</span>).<span class="ident">unwrap</span>(), <span class="number">42</span>);</pre></div>
+<span class="macro">assert_eq!</span>(<span class="ident">rt</span>.<span class="ident">block_on</span>(<span class="ident">handle</span>).<span class="ident">unwrap</span>(), <span class="number">42</span>);</pre></div>
 <h1 id="panics" class="section-header"><a href="#panics">Panics</a></h1>
 <p>This function panics if the spawn fails. Failure occurs if the executor is currently at
 capacity and is unable to spawn a new future.</p>

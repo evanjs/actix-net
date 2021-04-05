@@ -8,7 +8,7 @@ is passed in a reference to the request being handled by the service.</p>
 <div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore">
 <span class="kw">let</span> <span class="ident">traced_service</span> <span class="op">=</span> <span class="ident">trace</span>(
     <span class="ident">web_service</span>,
-    <span class="op">|</span><span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="ident">Request</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="macro">span</span><span class="macro">!</span>(<span class="ident">Level</span>::<span class="ident">INFO</span>, <span class="string">&quot;request&quot;</span>, <span class="ident">req</span>.<span class="ident">id</span>))
+    <span class="op">|</span><span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="ident">Request</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="macro">span!</span>(<span class="ident">Level</span>::<span class="ident">INFO</span>, <span class="string">&quot;request&quot;</span>, <span class="ident">req</span>.<span class="ident">id</span>))
 );</pre></div>
 </div></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="actix_tracing" data-search-js="../search-index.js"></div>
     <script src="../main.js"></script></body></html>

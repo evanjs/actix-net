@@ -5,6 +5,6 @@
 <span class="kw">use</span> <span class="ident">actix_utils</span>::<span class="ident">future</span>::<span class="ident">ok</span>;
 
 <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">ok</span>::<span class="op">&lt;</span><span class="kw">_</span>, ()<span class="op">&gt;</span>(<span class="number">1</span>);
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">a</span>.<span class="kw">await</span>, <span class="prelude-val">Ok</span>(<span class="number">1</span>));</pre></div>
+<span class="macro">assert_eq!</span>(<span class="ident">a</span>.<span class="kw">await</span>, <span class="prelude-val">Ok</span>(<span class="number">1</span>));</pre></div>
 </div></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="actix_utils" data-search-js="../../search-index.js"></div>
     <script src="../../main.js"></script></body></html>

@@ -148,7 +148,7 @@
                     <span class="ident">unix</span>::<span class="ident">signal</span>(<span class="kw-2">*</span><span class="ident">kind</span>)
                         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">tokio_sig</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">sig</span>, <span class="ident">tokio_sig</span>))
                         .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-                            <span class="ident">log</span>::<span class="macro">error</span><span class="macro">!</span>(
+                            <span class="ident">log</span>::<span class="macro">error!</span>(
                                 <span class="string">&quot;Can not initialize stream handler for {:?} err: {}&quot;</span>,
                                 <span class="ident">sig</span>,
                                 <span class="ident">e</span>

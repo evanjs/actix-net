@@ -395,7 +395,7 @@
     }
 }
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ThenServiceResponse</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">A</span>: <span class="ident">Service</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
@@ -406,7 +406,7 @@
     }
 }
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="attribute">#[<span class="ident">project</span> <span class="op">=</span> <span class="ident">StateProj</span>]</span>
     <span class="kw">enum</span> <span class="ident">State</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
@@ -430,7 +430,7 @@
 
         <span class="kw">match</span> <span class="ident">this</span>.<span class="ident">state</span>.<span class="ident">as_mut</span>().<span class="ident">project</span>() {
             <span class="ident">StateProj</span>::<span class="ident">A</span> { <span class="ident">fut</span>, <span class="ident">b</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">fut</span>.<span class="ident">poll</span>(<span class="ident">cx</span>));
+                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">ready!</span>(<span class="ident">fut</span>.<span class="ident">poll</span>(<span class="ident">cx</span>));
                 <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">b</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">b</span>.<span class="number">1</span>.<span class="ident">call</span>(<span class="ident">res</span>);
                 <span class="ident">this</span>.<span class="ident">state</span>.<span class="ident">set</span>(<span class="ident">State</span>::<span class="ident">B</span> { <span class="ident">fut</span> });
@@ -492,7 +492,7 @@
     }
 }
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ThenServiceFactoryResponse</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">A</span>: <span class="ident">ServiceFactory</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
@@ -626,8 +626,8 @@
         <span class="kw">let</span> <span class="ident">cnt</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">Cell</span>::<span class="ident">new</span>(<span class="number">0</span>));
         <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">pipeline</span>(<span class="ident">Srv1</span>(<span class="ident">cnt</span>.<span class="ident">clone</span>())).<span class="ident">then</span>(<span class="ident">Srv2</span>(<span class="ident">cnt</span>.<span class="ident">clone</span>()));
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">lazy</span>(<span class="op">|</span><span class="ident">cx</span><span class="op">|</span> <span class="ident">srv</span>.<span class="ident">poll_ready</span>(<span class="ident">cx</span>)).<span class="kw">await</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>, <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Err</span>(())));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cnt</span>.<span class="ident">get</span>(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>, <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Err</span>(())));
+        <span class="macro">assert_eq!</span>(<span class="ident">cnt</span>.<span class="ident">get</span>(), <span class="number">2</span>);
     }
 
     <span class="attribute">#[<span class="ident">actix_rt</span>::<span class="ident">test</span>]</span>
@@ -636,12 +636,12 @@
         <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">pipeline</span>(<span class="ident">Srv1</span>(<span class="ident">cnt</span>.<span class="ident">clone</span>())).<span class="ident">then</span>(<span class="ident">Srv2</span>(<span class="ident">cnt</span>));
 
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">srv</span>.<span class="ident">call</span>(<span class="prelude-val">Ok</span>(<span class="string">&quot;srv1&quot;</span>)).<span class="kw">await</span>;
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv1&quot;</span>, <span class="string">&quot;ok&quot;</span>));
+        <span class="macro">assert!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv1&quot;</span>, <span class="string">&quot;ok&quot;</span>));
 
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">srv</span>.<span class="ident">call</span>(<span class="prelude-val">Err</span>(<span class="string">&quot;srv&quot;</span>)).<span class="kw">await</span>;
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv2&quot;</span>, <span class="string">&quot;err&quot;</span>));
+        <span class="macro">assert!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv2&quot;</span>, <span class="string">&quot;err&quot;</span>));
     }
 
     <span class="attribute">#[<span class="ident">actix_rt</span>::<span class="ident">test</span>]</span>
@@ -652,12 +652,12 @@
         <span class="kw">let</span> <span class="ident">factory</span> <span class="op">=</span> <span class="ident">pipeline_factory</span>(<span class="ident">blank</span>).<span class="ident">then</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">Srv2</span>(<span class="ident">cnt</span>.<span class="ident">clone</span>()))));
         <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">factory</span>.<span class="ident">new_service</span>(<span class="kw-2">&amp;</span>()).<span class="kw">await</span>.<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">srv</span>.<span class="ident">call</span>(<span class="prelude-val">Ok</span>(<span class="string">&quot;srv1&quot;</span>)).<span class="kw">await</span>;
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv1&quot;</span>, <span class="string">&quot;ok&quot;</span>));
+        <span class="macro">assert!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv1&quot;</span>, <span class="string">&quot;ok&quot;</span>));
 
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">srv</span>.<span class="ident">call</span>(<span class="prelude-val">Err</span>(<span class="string">&quot;srv&quot;</span>)).<span class="kw">await</span>;
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv2&quot;</span>, <span class="string">&quot;err&quot;</span>));
+        <span class="macro">assert!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>(), (<span class="string">&quot;srv2&quot;</span>, <span class="string">&quot;err&quot;</span>));
     }
 }
 </pre></div>

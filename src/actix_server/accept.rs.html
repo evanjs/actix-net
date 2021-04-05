@@ -480,9 +480,9 @@
 
 <span class="kw">impl</span> <span class="ident">AcceptLoop</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">srv</span>: <span class="ident">Server</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">poll</span> <span class="op">=</span> <span class="ident">Poll</span>::<span class="ident">new</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Can not create `mio::Poll`: {}&quot;</span>, <span class="ident">e</span>));
+        <span class="kw">let</span> <span class="ident">poll</span> <span class="op">=</span> <span class="ident">Poll</span>::<span class="ident">new</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">panic!</span>(<span class="string">&quot;Can not create `mio::Poll`: {}&quot;</span>, <span class="ident">e</span>));
         <span class="kw">let</span> <span class="ident">waker</span> <span class="op">=</span> <span class="ident">WakerQueue</span>::<span class="ident">new</span>(<span class="ident">poll</span>.<span class="ident">registry</span>())
-            .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Can not create `mio::Waker`: {}&quot;</span>, <span class="ident">e</span>));
+            .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">panic!</span>(<span class="string">&quot;Can not create `mio::Waker`: {}&quot;</span>, <span class="ident">e</span>));
 
         <span class="self">Self</span> {
             <span class="ident">srv</span>: <span class="prelude-val">Some</span>(<span class="ident">srv</span>),
@@ -574,7 +574,7 @@
             <span class="comment">// Start listening for incoming connections</span>
             <span class="ident">poll</span>.<span class="ident">registry</span>()
                 .<span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">lst</span>, <span class="ident">MioToken</span>(<span class="ident">token</span>), <span class="ident">Interest</span>::<span class="ident">READABLE</span>)
-                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Can not register io: {}&quot;</span>, <span class="ident">e</span>));
+                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">panic!</span>(<span class="string">&quot;Can not register io: {}&quot;</span>, <span class="ident">e</span>));
 
             <span class="ident">entry</span>.<span class="ident">insert</span>(<span class="ident">ServerSocketInfo</span> {
                 <span class="ident">addr</span>,
@@ -606,7 +606,7 @@
                         <span class="kw">continue</span>;
                     }
                     <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Poll error: {}&quot;</span>, <span class="ident">e</span>);
+                        <span class="macro">panic!</span>(<span class="string">&quot;Poll error: {}&quot;</span>, <span class="ident">e</span>);
                     }
                 }
             }
@@ -717,8 +717,8 @@
 
     <span class="kw">fn</span> <span class="ident">register_logged</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">token</span>: <span class="ident">usize</span>, <span class="ident">info</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ServerSocketInfo</span>) {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">register</span>(<span class="ident">token</span>, <span class="ident">info</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Resume accepting connections on {}&quot;</span>, <span class="ident">info</span>.<span class="ident">addr</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Can not register server socket {}&quot;</span>, <span class="ident">e</span>),
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">info!</span>(<span class="string">&quot;Resume accepting connections on {}&quot;</span>, <span class="ident">info</span>.<span class="ident">addr</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">error!</span>(<span class="string">&quot;Can not register server socket {}&quot;</span>, <span class="ident">e</span>),
         }
     }
 
@@ -728,9 +728,9 @@
 
     <span class="kw">fn</span> <span class="ident">deregister_logged</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">info</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ServerSocketInfo</span>) {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">deregister</span>(<span class="ident">info</span>) {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Paused accepting connections on {}&quot;</span>, <span class="ident">info</span>.<span class="ident">addr</span>),
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">info!</span>(<span class="string">&quot;Paused accepting connections on {}&quot;</span>, <span class="ident">info</span>.<span class="ident">addr</span>),
             <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Can not deregister server socket {}&quot;</span>, <span class="ident">e</span>)
+                <span class="macro">error!</span>(<span class="string">&quot;Can not deregister server socket {}&quot;</span>, <span class="ident">e</span>)
             }
         }
     }
@@ -815,7 +815,7 @@
                 <span class="self">self</span>.<span class="ident">srv</span>.<span class="ident">worker_faulted</span>(<span class="self">self</span>.<span class="ident">handles</span>[<span class="self">self</span>.<span class="ident">next</span>].<span class="ident">idx</span>);
                 <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">swap_remove</span>(<span class="self">self</span>.<span class="ident">next</span>);
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">is_empty</span>() {
-                    <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;No workers&quot;</span>);
+                    <span class="macro">error!</span>(<span class="string">&quot;No workers&quot;</span>);
                     <span class="self">self</span>.<span class="ident">maybe_backpressure</span>(<span class="ident">sockets</span>, <span class="bool-val">true</span>);
                     <span class="comment">// All workers are gone and Conn is nowhere to be sent.</span>
                     <span class="comment">// Treat this situation as Ok and drop Conn.</span>
@@ -845,7 +845,7 @@
                 <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
                 <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">connection_error</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">continue</span>,
                 <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Error accepting connection: {}&quot;</span>, <span class="ident">e</span>);
+                    <span class="macro">error!</span>(<span class="string">&quot;Error accepting connection: {}&quot;</span>, <span class="ident">e</span>);
 
                     <span class="comment">// deregister listener temporary</span>
                     <span class="self">self</span>.<span class="ident">deregister_logged</span>(<span class="ident">info</span>);

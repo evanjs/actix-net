@@ -247,11 +247,11 @@
 
     <span class="attribute">#[<span class="ident">actix_rt</span>::<span class="ident">test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_join_all</span>() {
-        <span class="kw">let</span> <span class="ident">futs</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="number">1</span>)), <span class="ident">ready</span>(<span class="prelude-val">Err</span>(<span class="number">3</span>)), <span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="number">9</span>))];
+        <span class="kw">let</span> <span class="ident">futs</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="number">1</span>)), <span class="ident">ready</span>(<span class="prelude-val">Err</span>(<span class="number">3</span>)), <span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="number">9</span>))];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">join_all</span>(<span class="ident">futs</span>).<span class="kw">await</span>.<span class="ident">into_iter</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Ok</span>(<span class="number">1</span>), <span class="ident">res</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Err</span>(<span class="number">3</span>), <span class="ident">res</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Ok</span>(<span class="number">9</span>), <span class="ident">res</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Ok</span>(<span class="number">1</span>), <span class="ident">res</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Err</span>(<span class="number">3</span>), <span class="ident">res</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Ok</span>(<span class="number">9</span>), <span class="ident">res</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>());
     }
 }
 </pre></div>

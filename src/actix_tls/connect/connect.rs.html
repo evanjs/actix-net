@@ -390,7 +390,7 @@
 
 <span class="kw">impl</span> <span class="ident">ConnectAddrs</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_none</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="macro">matches</span><span class="macro">!</span>(<span class="self">self</span>, <span class="self">Self</span>::<span class="prelude-val">None</span>)
+        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="self">Self</span>::<span class="prelude-val">None</span>)
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
@@ -517,7 +517,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Address</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Connect</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}:{}&quot;</span>, <span class="self">self</span>.<span class="ident">hostname</span>(), <span class="self">self</span>.<span class="ident">port</span>())
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}:{}&quot;</span>, <span class="self">self</span>.<span class="ident">hostname</span>(), <span class="self">self</span>.<span class="ident">port</span>())
     }
 }
 
@@ -626,7 +626,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span>: <span class="ident">fmt</span>::<span class="ident">Debug</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Connection</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Stream {{{:?}}}&quot;</span>, <span class="self">self</span>.<span class="ident">io</span>)
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Stream {{{:?}}}&quot;</span>, <span class="self">self</span>.<span class="ident">io</span>)
     }
 }
 
@@ -652,11 +652,11 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_host_parser</span>() {
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">None</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com:8080&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">Some</span>(<span class="number">8080</span>)));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example:8080&quot;</span>), (<span class="string">&quot;example&quot;</span>, <span class="prelude-val">Some</span>(<span class="number">8080</span>)));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com:false&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">None</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com:false:false&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">None</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">None</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com:8080&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">Some</span>(<span class="number">8080</span>)));
+        <span class="macro">assert_eq!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example:8080&quot;</span>), (<span class="string">&quot;example&quot;</span>, <span class="prelude-val">Some</span>(<span class="number">8080</span>)));
+        <span class="macro">assert_eq!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com:false&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">None</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">parse_host</span>(<span class="string">&quot;example.com:false:false&quot;</span>), (<span class="string">&quot;example.com&quot;</span>, <span class="prelude-val">None</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -669,14 +669,14 @@
         <span class="ident">addrs</span>.<span class="ident">push_back</span>(<span class="ident">unspecified</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">ConnectAddrsIter</span>::<span class="ident">Multi</span>(<span class="ident">addrs</span>.<span class="ident">iter</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">localhost</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">unspecified</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">localhost</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">unspecified</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">ConnectAddrsIter</span>::<span class="ident">MultiOwned</span>(<span class="ident">addrs</span>.<span class="ident">into_iter</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">localhost</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">unspecified</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">localhost</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">unspecified</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -684,17 +684,17 @@
         <span class="kw">let</span> <span class="ident">localhost</span> <span class="op">=</span> <span class="ident">SocketAddr</span>::<span class="ident">from</span>((<span class="ident">IpAddr</span>::<span class="ident">from</span>(<span class="ident">Ipv4Addr</span>::<span class="ident">LOCALHOST</span>), <span class="number">8080</span>));
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">ConnectAddrsIter</span>::<span class="ident">One</span>(<span class="ident">localhost</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">localhost</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">localhost</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">ConnectAddrsIter</span>::<span class="prelude-val">None</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_local_addr</span>() {
         <span class="kw">let</span> <span class="ident">conn</span> <span class="op">=</span> <span class="ident">Connect</span>::<span class="ident">new</span>(<span class="string">&quot;hello&quot;</span>).<span class="ident">set_local_addr</span>([<span class="number">127</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="macro">assert_eq!</span>(
             <span class="ident">conn</span>.<span class="ident">local_addr</span>.<span class="ident">unwrap</span>(),
             <span class="ident">IpAddr</span>::<span class="ident">V4</span>(<span class="ident">Ipv4Addr</span>::<span class="ident">new</span>(<span class="number">127</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>))
         )

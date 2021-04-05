@@ -101,7 +101,7 @@
 
 <span class="kw">use</span> <span class="ident">pin_project_lite</span>::<span class="ident">pin_project</span>;
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="doccomment">/// Combines two different futures that have the same output type.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Construct variants with [`Either::left`] and [`Either::right`].</span>
@@ -176,10 +176,10 @@
     <span class="attribute">#[<span class="ident">actix_rt</span>::<span class="ident">test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_either</span>() {
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">Either</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Ready</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>::<span class="ident">left</span>(<span class="ident">ready</span>(<span class="number">42</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="kw">await</span>, <span class="number">42</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="kw">await</span>, <span class="number">42</span>);
 
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">Either</span>::<span class="op">&lt;</span><span class="ident">Ready</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>::<span class="ident">right</span>(<span class="ident">ready</span>(<span class="number">43</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="kw">await</span>, <span class="number">43</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="kw">await</span>, <span class="number">43</span>);
     }
 }
 </pre></div>

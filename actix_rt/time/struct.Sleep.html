@@ -12,7 +12,7 @@ If you use it with <code>.await</code>, this does not apply.</p>
 <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">main</span>]</span>
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() {
     <span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>)).<span class="kw">await</span>;
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;100 ms have elapsed&quot;</span>);
+    <span class="macro">println!</span>(<span class="string">&quot;100 ms have elapsed&quot;</span>);
 }</pre></div>
 <p>Use with <a href="../macro.select.html"><code>select!</code></a>. Pinning the <code>Sleep</code> with <a href="../macro.pin.html"><code>tokio::pin!</code></a> is
 necessary when the same <code>Sleep</code> is selected on multiple times.</p>
@@ -23,12 +23,12 @@ necessary when the same <code>Sleep</code> is selected on multiple times.</p>
 <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">main</span>]</span>
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() {
     <span class="kw">let</span> <span class="ident">sleep</span> <span class="op">=</span> <span class="ident">time</span>::<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">10</span>));
-    <span class="ident">tokio</span>::<span class="macro">pin</span><span class="macro">!</span>(<span class="ident">sleep</span>);
+    <span class="ident">tokio</span>::<span class="macro">pin!</span>(<span class="ident">sleep</span>);
 
     <span class="kw">loop</span> {
-        <span class="ident">tokio</span>::<span class="macro">select</span><span class="macro">!</span> {
+        <span class="ident">tokio</span>::<span class="macro">select!</span> {
             () <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sleep</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;timer elapsed&quot;</span>);
+                <span class="macro">println!</span>(<span class="string">&quot;timer elapsed&quot;</span>);
                 <span class="ident">sleep</span>.<span class="ident">as_mut</span>().<span class="ident">reset</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">50</span>));
             },
         }
@@ -64,7 +64,7 @@ the <code>HasSleep</code> struct will not be <code>Unpin</code> as a consequence
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">time</span>::<span class="ident">Sleep</span>;
 <span class="kw">use</span> <span class="ident">pin_project_lite</span>::<span class="ident">pin_project</span>;
 
-<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="macro">pin_project!</span> {
     <span class="kw">struct</span> <span class="ident">HasSleep</span> {
         <span class="attribute">#[<span class="ident">pin</span>]</span>
         <span class="ident">sleep</span>: <span class="ident">Sleep</span>,
@@ -94,7 +94,7 @@ completed.</p>
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>};
 
 <span class="kw">let</span> <span class="ident">sleep</span> <span class="op">=</span> <span class="ident">tokio</span>::<span class="ident">time</span>::<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">10</span>));
-<span class="ident">tokio</span>::<span class="macro">pin</span><span class="macro">!</span>(<span class="ident">sleep</span>);
+<span class="ident">tokio</span>::<span class="macro">pin!</span>(<span class="ident">sleep</span>);
 
 <span class="ident">sleep</span>.<span class="ident">as_mut</span>().<span class="ident">reset</span>(<span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">20</span>));</pre></div>
 </div></div><h2 id="trait-implementations" class="small-section-header">Trait Implementations<a href="#trait-implementations" class="anchor"></a></h2><div id="trait-implementations-list"><h3 id="impl-Debug" class="impl"><code class="in-band">impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../actix_rt/time/struct.Sleep.html" title="struct actix_rt::time::Sleep">Sleep</a></code><a href="#impl-Debug" class="anchor"></a></h3><div class="impl-items"><h4 id="method.fmt" class="method hidden"><code>pub fn <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt" class="fnname">fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>&lt;'_&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html" title="struct core::fmt::Error">Error</a>&gt;</code></h4><div class='docblock hidden'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>

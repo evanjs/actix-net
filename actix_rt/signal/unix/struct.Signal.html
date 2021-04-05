@@ -52,7 +52,7 @@ occurs as expected after listening for specific signals.</p>
     <span class="comment">// Print whenever a HUP signal is received</span>
     <span class="kw">loop</span> {
         <span class="ident">stream</span>.<span class="ident">recv</span>().<span class="kw">await</span>;
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;got signal HUP&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;got signal HUP&quot;</span>);
     }
 }</pre></div>
 </div><h2 id="implementations" class="small-section-header">Implementations<a href="#implementations" class="anchor"></a></h2><h3 id="impl" class="impl"><code class="in-band">impl <a class="struct" href="../../../actix_rt/signal/unix/struct.Signal.html" title="struct actix_rt::signal::unix::Signal">Signal</a></code><a href="#impl" class="anchor"></a></h3><div class="impl-items"><h4 id="method.recv" class="method"><code>pub async fn <a href="#method.recv" class="fnname">recv</a>(&amp;'_ mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></h4><div class="docblock"><p>Receives the next signal notification event.</p>
@@ -71,7 +71,7 @@ occurs as expected after listening for specific signals.</p>
     <span class="comment">// Print whenever a HUP signal is received</span>
     <span class="kw">loop</span> {
         <span class="ident">stream</span>.<span class="ident">recv</span>().<span class="kw">await</span>;
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;got signal HUP&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;got signal HUP&quot;</span>);
     }
 }</pre></div>
 </div><h4 id="method.poll_recv" class="method"><code>pub fn <a href="#method.poll_recv" class="fnname">poll_recv</a>(&amp;mut self, cx: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/task/wake/struct.Context.html" title="struct core::task::wake::Context">Context</a>&lt;'_&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/task/poll/enum.Poll.html" title="enum core::task::poll::Poll">Poll</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;&gt;</code></h4><div class="docblock"><p>Polls to receive the next signal notification event, outside of an
@@ -101,7 +101,7 @@ sent before it was closed have been received.</li>
     <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Output</span><span class="op">&gt;</span> {
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;polling MyFuture&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;polling MyFuture&quot;</span>);
         <span class="self">self</span>.<span class="ident">signal</span>.<span class="ident">poll_recv</span>(<span class="ident">cx</span>)
     }
 }</pre></div>

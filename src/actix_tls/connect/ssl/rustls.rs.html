@@ -216,10 +216,10 @@
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Error</span>;
     <span class="kw">type</span> <span class="ident">Future</span> <span class="op">=</span> <span class="ident">RustlsConnectorServiceFuture</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>;
 
-    <span class="ident">actix_service</span>::<span class="macro">always_ready</span><span class="macro">!</span>();
+    <span class="ident">actix_service</span>::<span class="macro">always_ready!</span>();
 
     <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connection</span>: <span class="ident">Connection</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Future</span> {
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;SSL Handshake start for: {:?}&quot;</span>, <span class="ident">connection</span>.<span class="ident">host</span>());
+        <span class="macro">trace!</span>(<span class="string">&quot;SSL Handshake start for: {:?}&quot;</span>, <span class="ident">connection</span>.<span class="ident">host</span>());
         <span class="kw">let</span> (<span class="ident">stream</span>, <span class="ident">connection</span>) <span class="op">=</span> <span class="ident">connection</span>.<span class="ident">replace_io</span>(());
 
         <span class="kw">match</span> <span class="ident">DNSNameRef</span>::<span class="ident">try_from_ascii_str</span>(<span class="ident">connection</span>.<span class="ident">host</span>()) {
@@ -254,9 +254,9 @@
                 <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="string">&quot;rustls currently only handles hostname-based connections. See https://github.com/briansmith/webpki/issues/54&quot;</span>)
             )),
             <span class="self">Self</span>::<span class="ident">Future</span> { <span class="ident">connect</span>, <span class="ident">connection</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">Pin</span>::<span class="ident">new</span>(<span class="ident">connect</span>).<span class="ident">poll</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="macro">ready!</span>(<span class="ident">Pin</span>::<span class="ident">new</span>(<span class="ident">connect</span>).<span class="ident">poll</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">connection</span> <span class="op">=</span> <span class="ident">connection</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;SSL Handshake success: {:?}&quot;</span>, <span class="ident">connection</span>.<span class="ident">host</span>());
+                <span class="macro">trace!</span>(<span class="string">&quot;SSL Handshake success: {:?}&quot;</span>, <span class="ident">connection</span>.<span class="ident">host</span>());
                 <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">connection</span>.<span class="ident">replace_io</span>(<span class="ident">stream</span>).<span class="number">1</span>))
             }
         }

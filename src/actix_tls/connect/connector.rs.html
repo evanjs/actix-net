@@ -246,7 +246,7 @@
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ConnectError</span>;
     <span class="kw">type</span> <span class="ident">Future</span> <span class="op">=</span> <span class="ident">TcpConnectorResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
 
-    <span class="ident">actix_service</span>::<span class="macro">always_ready</span><span class="macro">!</span>();
+    <span class="ident">actix_service</span>::<span class="macro">always_ready!</span>();
 
     <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="ident">Connect</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Future</span> {
         <span class="kw">let</span> <span class="ident">port</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">port</span>();
@@ -281,18 +281,18 @@
         <span class="ident">addr</span>: <span class="ident">ConnectAddrs</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TcpConnectorResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">addr</span>.<span class="ident">is_none</span>() {
-            <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;TCP connector: unresolved connection address&quot;</span>);
+            <span class="macro">error!</span>(<span class="string">&quot;TCP connector: unresolved connection address&quot;</span>);
             <span class="kw">return</span> <span class="ident">TcpConnectorResponse</span>::<span class="ident">Error</span>(<span class="prelude-val">Some</span>(<span class="ident">ConnectError</span>::<span class="ident">Unresolved</span>));
         }
 
-        <span class="macro">trace</span><span class="macro">!</span>(
+        <span class="macro">trace!</span>(
             <span class="string">&quot;TCP connector: connecting to {} on port {}&quot;</span>,
             <span class="ident">req</span>.<span class="ident">hostname</span>(),
             <span class="ident">port</span>
         );
 
         <span class="kw">match</span> <span class="ident">addr</span> {
-            <span class="ident">ConnectAddrs</span>::<span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(<span class="string">&quot;none variant already checked&quot;</span>),
+            <span class="ident">ConnectAddrs</span>::<span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(<span class="string">&quot;none variant already checked&quot;</span>),
 
             <span class="ident">ConnectAddrs</span>::<span class="ident">One</span>(<span class="ident">addr</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TcpConnectorResponse</span>::<span class="ident">Response</span> {
                 <span class="ident">req</span>: <span class="prelude-val">Some</span>(<span class="ident">req</span>),
@@ -333,10 +333,10 @@
                 <span class="ident">addrs</span>,
                 <span class="ident">stream</span>,
             } <span class="op">=</span><span class="op">&gt;</span> <span class="kw">loop</span> {
-                <span class="kw">match</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">stream</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)) {
+                <span class="kw">match</span> <span class="macro">ready!</span>(<span class="ident">stream</span>.<span class="ident">poll</span>(<span class="ident">cx</span>)) {
                     <span class="prelude-val">Ok</span>(<span class="ident">sock</span>) <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
-                        <span class="macro">trace</span><span class="macro">!</span>(
+                        <span class="macro">trace!</span>(
                             <span class="string">&quot;TCP connector: successfully connected to {:?} - {:?}&quot;</span>,
                             <span class="ident">req</span>.<span class="ident">hostname</span>(),
                             <span class="ident">sock</span>.<span class="ident">peer_addr</span>()
@@ -345,7 +345,7 @@
                     }
 
                     <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="macro">trace</span><span class="macro">!</span>(
+                        <span class="macro">trace!</span>(
                             <span class="string">&quot;TCP connector: failed to connect to {:?} port: {}&quot;</span>,
                             <span class="ident">req</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">hostname</span>(),
                             <span class="ident">port</span>,

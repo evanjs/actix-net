@@ -279,7 +279,7 @@
     <span class="ident">array</span>[(<span class="ident">ch</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">3</span>) <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">|</span><span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="ident">ch</span> <span class="op">&amp;</span> <span class="number">7</span>)
 }
 
-<span class="macro">thread_local</span><span class="macro">!</span> {
+<span class="macro">thread_local!</span> {
     <span class="kw">static</span> <span class="ident">DEFAULT_QUOTER</span>: <span class="ident">Quoter</span> <span class="op">=</span> <span class="ident">Quoter</span>::<span class="ident">new</span>(<span class="string">b&quot;@:&quot;</span>, <span class="string">b&quot;/+&quot;</span>);
 }
 
@@ -459,18 +459,18 @@
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">try_from</span>(<span class="string">&quot;/user/2345/test&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">new</span>(<span class="ident">url</span>));
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;2345&quot;</span>);
+        <span class="macro">assert!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;2345&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">try_from</span>(<span class="string">&quot;/user/qwe%25/test&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">new</span>(<span class="ident">url</span>));
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;qwe%&quot;</span>);
+        <span class="macro">assert!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;qwe%&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">try_from</span>(<span class="string">&quot;/user/qwe%25rty/test&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">new</span>(<span class="ident">url</span>));
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;qwe%rty&quot;</span>);
+        <span class="macro">assert!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;qwe%rty&quot;</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -480,9 +480,9 @@
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">256</span> {
             <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">i</span> <span class="kw">as</span> <span class="ident">u8</span>;
             <span class="kw">if</span> <span class="ident">hex</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>) {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_hex</span>(<span class="ident">c</span>).<span class="ident">is_some</span>())
+                <span class="macro">assert!</span>(<span class="ident">from_hex</span>(<span class="ident">c</span>).<span class="ident">is_some</span>())
             } <span class="kw">else</span> {
-                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_hex</span>(<span class="ident">c</span>).<span class="ident">is_none</span>())
+                <span class="macro">assert!</span>(<span class="ident">from_hex</span>(<span class="ident">c</span>).<span class="ident">is_none</span>())
             }
         }
 
@@ -490,7 +490,7 @@
             <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>,
         ];
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">hex</span>.<span class="ident">len</span>() {
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">from_hex</span>(<span class="ident">hex</span>[<span class="ident">i</span>]).<span class="ident">unwrap</span>(), <span class="ident">expected</span>[<span class="ident">i</span>]);
+            <span class="macro">assert_eq!</span>(<span class="ident">from_hex</span>(<span class="ident">hex</span>[<span class="ident">i</span>]).<span class="ident">unwrap</span>(), <span class="ident">expected</span>[<span class="ident">i</span>]);
         }
     }
 }

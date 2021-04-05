@@ -113,7 +113,7 @@
     <span class="attribute">#[<span class="ident">actix_rt</span>::<span class="ident">test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_poll_fn</span>() {
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">poll_fn</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="number">42</span>)).<span class="kw">await</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>, <span class="number">42</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>, <span class="number">42</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">5</span>;
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">poll_fn</span>(<span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
@@ -127,7 +127,7 @@
             }
         })
         .<span class="kw">await</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>, <span class="number">42</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">res</span>, <span class="number">42</span>);
     }
 }
 </pre></div>

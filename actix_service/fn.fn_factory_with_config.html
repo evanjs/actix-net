@@ -20,9 +20,9 @@ a <code>ServiceFactory</code>.</p>
     <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="ident">factory</span>.<span class="ident">new_service</span>(<span class="number">10</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">srv</span>.<span class="ident">call</span>(<span class="number">10</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">result</span>, <span class="number">100</span>);
+    <span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="number">100</span>);
 
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;10 * 10 = {}&quot;</span>, <span class="ident">result</span>);
+    <span class="macro">println!</span>(<span class="string">&quot;10 * 10 = {}&quot;</span>, <span class="ident">result</span>);
     <span class="prelude-val">Ok</span>(())
 }</pre></div>
 </div></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="actix_service" data-search-js="../search-index.js"></div>

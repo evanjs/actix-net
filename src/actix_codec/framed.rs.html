@@ -435,14 +435,14 @@
 <span class="doccomment">/// High-water mark</span>
 <span class="kw">const</span> <span class="ident">HW</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8</span> <span class="op">*</span> <span class="number">1024</span>;
 
-<span class="ident">bitflags</span>::<span class="macro">bitflags</span><span class="macro">!</span> {
+<span class="ident">bitflags</span>::<span class="macro">bitflags!</span> {
     <span class="kw">struct</span> <span class="ident">Flags</span>: <span class="ident">u8</span> {
         <span class="kw">const</span> <span class="ident">EOF</span> <span class="op">=</span> <span class="number">0b0001</span>;
         <span class="kw">const</span> <span class="ident">READABLE</span> <span class="op">=</span> <span class="number">0b0010</span>;
     }
 }
 
-<span class="ident">pin_project_lite</span>::<span class="macro">pin_project</span><span class="macro">!</span> {
+<span class="ident">pin_project_lite</span>::<span class="macro">pin_project!</span> {
     <span class="doccomment">/// A unified `Stream` and `Sink` interface to an underlying I/O object, using</span>
     <span class="doccomment">/// the `Encoder` and `Decoder` traits to encode and decode frames.</span>
     <span class="doccomment">///</span>
@@ -621,11 +621,11 @@
                     }
                 }
 
-                <span class="ident">log</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;attempting to decode a frame&quot;</span>);
+                <span class="ident">log</span>::<span class="macro">trace!</span>(<span class="string">&quot;attempting to decode a frame&quot;</span>);
 
                 <span class="kw">match</span> <span class="ident">this</span>.<span class="ident">codec</span>.<span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">this</span>.<span class="ident">read_buf</span>) {
                     <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">frame</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="ident">log</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;frame decoded from buffer&quot;</span>);
+                        <span class="ident">log</span>::<span class="macro">trace!</span>(<span class="string">&quot;frame decoded from buffer&quot;</span>);
                         <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">frame</span>)));
                     }
                     <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>))),
@@ -635,7 +635,7 @@
                 <span class="ident">this</span>.<span class="ident">flags</span>.<span class="ident">remove</span>(<span class="ident">Flags</span>::<span class="ident">READABLE</span>);
             }
 
-            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">this</span>.<span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">Flags</span>::<span class="ident">EOF</span>));
+            <span class="macro">debug_assert!</span>(<span class="op">!</span><span class="ident">this</span>.<span class="ident">flags</span>.<span class="ident">contains</span>(<span class="ident">Flags</span>::<span class="ident">EOF</span>));
 
             <span class="comment">// Otherwise, try to read more data and try again. Make sure we&#39;ve got room</span>
             <span class="kw">let</span> <span class="ident">remaining</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">read_buf</span>.<span class="ident">capacity</span>() <span class="op">-</span> <span class="ident">this</span>.<span class="ident">read_buf</span>.<span class="ident">len</span>();
@@ -666,12 +666,12 @@
         <span class="ident">U</span>: <span class="ident">Encoder</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">this</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">project</span>();
-        <span class="ident">log</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;flushing framed transport&quot;</span>);
+        <span class="ident">log</span>::<span class="macro">trace!</span>(<span class="string">&quot;flushing framed transport&quot;</span>);
 
         <span class="kw">while</span> <span class="op">!</span><span class="ident">this</span>.<span class="ident">write_buf</span>.<span class="ident">is_empty</span>() {
-            <span class="ident">log</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;writing; remaining={}&quot;</span>, <span class="ident">this</span>.<span class="ident">write_buf</span>.<span class="ident">len</span>());
+            <span class="ident">log</span>::<span class="macro">trace!</span>(<span class="string">&quot;writing; remaining={}&quot;</span>, <span class="ident">this</span>.<span class="ident">write_buf</span>.<span class="ident">len</span>());
 
-            <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">as_mut</span>().<span class="ident">poll_write</span>(<span class="ident">cx</span>, <span class="ident">this</span>.<span class="ident">write_buf</span>))<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="macro">ready!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">as_mut</span>().<span class="ident">poll_write</span>(<span class="ident">cx</span>, <span class="ident">this</span>.<span class="ident">write_buf</span>))<span class="question-mark">?</span>;
 
             <span class="kw">if</span> <span class="ident">n</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="kw">return</span> <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(
@@ -686,9 +686,9 @@
         }
 
         <span class="comment">// Try flushing the underlying IO</span>
-        <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">poll_flush</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
+        <span class="macro">ready!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">poll_flush</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
 
-        <span class="ident">log</span>::<span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;framed transport flushed&quot;</span>);
+        <span class="ident">log</span>::<span class="macro">trace!</span>(<span class="string">&quot;framed transport flushed&quot;</span>);
         <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Ok</span>(()))
     }
 
@@ -702,8 +702,8 @@
         <span class="ident">U</span>: <span class="ident">Encoder</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">this</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_mut</span>().<span class="ident">project</span>();
-        <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">as_mut</span>().<span class="ident">poll_flush</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
-        <span class="macro">ready</span><span class="macro">!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">as_mut</span>().<span class="ident">poll_shutdown</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
+        <span class="macro">ready!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">as_mut</span>().<span class="ident">poll_flush</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
+        <span class="macro">ready!</span>(<span class="ident">this</span>.<span class="ident">io</span>.<span class="ident">as_mut</span>().<span class="ident">poll_shutdown</span>(<span class="ident">cx</span>))<span class="question-mark">?</span>;
         <span class="ident">Poll</span>::<span class="ident">Ready</span>(<span class="prelude-val">Ok</span>(()))
     }
 }
