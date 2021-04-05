@@ -433,6 +433,20 @@
 <span id="432">432</span>
 <span id="433">433</span>
 <span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">thread</span>};
@@ -736,27 +750,41 @@
     }
 
     <span class="kw">fn</span> <span class="ident">deregister_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>) {
-        <span class="ident">sockets</span>.<span class="ident">iter_mut</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> {
-            <span class="self">self</span>.<span class="ident">deregister_logged</span>(<span class="ident">info</span>);
-        });
+        <span class="comment">// This is a best effort implementation with following limitation:</span>
+        <span class="comment">//</span>
+        <span class="comment">// Every ServerSocketInfo with associate timeout will be skipped and it&#39;s timeout</span>
+        <span class="comment">// is removed in the process.</span>
+        <span class="comment">//</span>
+        <span class="comment">// Therefore WakerInterest::Pause followed by WakerInterest::Resume in a very short</span>
+        <span class="comment">// gap (less than 500ms) would cause all timing out ServerSocketInfos be reregistered</span>
+        <span class="comment">// before expected timing.</span>
+        <span class="ident">sockets</span>
+            .<span class="ident">iter_mut</span>()
+            <span class="comment">// Take all timeout.</span>
+            <span class="comment">// This is to prevent Accept::process_timer method re-register a socket afterwards.</span>
+            .<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> (<span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">take</span>(), <span class="ident">info</span>))
+            <span class="comment">// Socket info with a timeout is already deregistered so skip them.</span>
+            .<span class="ident">filter</span>(<span class="op">|</span>(<span class="ident">timeout</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">timeout</span>.<span class="ident">is_none</span>())
+            .<span class="ident">for_each</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> <span class="self">self</span>.<span class="ident">deregister_logged</span>(<span class="ident">info</span>));
     }
 
     <span class="kw">fn</span> <span class="ident">maybe_backpressure</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sockets</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>, <span class="ident">on</span>: <span class="ident">bool</span>) {
         <span class="comment">// Only operate when server is in a different backpressure than the given flag.</span>
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">!</span><span class="op">=</span> <span class="ident">on</span> {
-            <span class="kw">if</span> <span class="ident">on</span> {
-                <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                <span class="comment">// TODO: figure out if timing out sockets can be safely de-registered twice.</span>
-                <span class="self">self</span>.<span class="ident">deregister_all</span>(<span class="ident">sockets</span>);
-            } <span class="kw">else</span> {
-                <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="ident">sockets</span>
-                    .<span class="ident">iter_mut</span>()
-                    <span class="comment">// Only operate on sockets without associated timeout.</span>
-                    <span class="comment">// Sockets with it will attempt to re-register when their timeout expires.</span>
-                    .<span class="ident">filter</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> <span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">is_none</span>())
-                    .<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">token</span>, <span class="ident">info</span>)<span class="op">|</span> <span class="self">self</span>.<span class="ident">register_logged</span>(<span class="ident">token</span>, <span class="ident">info</span>));
-            }
+            <span class="self">self</span>.<span class="ident">backpressure</span> <span class="op">=</span> <span class="ident">on</span>;
+            <span class="ident">sockets</span>
+                .<span class="ident">iter_mut</span>()
+                <span class="comment">// Only operate on sockets without associated timeout.</span>
+                <span class="comment">// Sockets with it should be handled by `accept` and `process_timer` methods.</span>
+                <span class="comment">// They are already deregistered or need to be reregister in the future.</span>
+                .<span class="ident">filter</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">info</span>)<span class="op">|</span> <span class="ident">info</span>.<span class="ident">timeout</span>.<span class="ident">is_none</span>())
+                .<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">token</span>, <span class="ident">info</span>)<span class="op">|</span> {
+                    <span class="kw">if</span> <span class="ident">on</span> {
+                        <span class="self">self</span>.<span class="ident">deregister_logged</span>(<span class="ident">info</span>);
+                    } <span class="kw">else</span> {
+                        <span class="self">self</span>.<span class="ident">register_logged</span>(<span class="ident">token</span>, <span class="ident">info</span>);
+                    }
+                });
         }
     }
 
