@@ -247,7 +247,7 @@
 <span id="246">246</span>
 <span id="247">247</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ResourcePath</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ResourcePath</span>;
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 <span class="kw">const</span> <span class="ident">GEN_DELIMS</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;:/?#[]@&quot;</span>;
@@ -280,30 +280,30 @@
 }
 
 <span class="macro">thread_local!</span> {
-    <span class="kw">static</span> <span class="ident">DEFAULT_QUOTER</span>: <span class="ident">Quoter</span> <span class="op">=</span> <span class="ident">Quoter</span>::<span class="ident">new</span>(<span class="string">b&quot;@:&quot;</span>, <span class="string">b&quot;/+&quot;</span>);
+    <span class="kw">static</span> <span class="ident">DEFAULT_QUOTER</span>: <span class="ident">Quoter</span> <span class="op">=</span> <span class="ident">Quoter::new</span>(<span class="string">b&quot;@:&quot;</span>, <span class="string">b&quot;/+&quot;</span>);
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Url</span> {
-    <span class="ident">uri</span>: <span class="ident">http</span>::<span class="ident">Uri</span>,
+    <span class="ident">uri</span>: <span class="ident">http::Uri</span>,
     <span class="ident">path</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Url</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">uri</span>: <span class="ident">http</span>::<span class="ident">Uri</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Url</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">uri</span>: <span class="ident">http::Uri</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Url</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">DEFAULT_QUOTER</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">requote</span>(<span class="ident">uri</span>.<span class="ident">path</span>().<span class="ident">as_bytes</span>()));
 
         <span class="ident">Url</span> { <span class="ident">uri</span>, <span class="ident">path</span> }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_quoter</span>(<span class="ident">uri</span>: <span class="ident">http</span>::<span class="ident">Uri</span>, <span class="ident">quoter</span>: <span class="kw-2">&amp;</span><span class="ident">Quoter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Url</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_quoter</span>(<span class="ident">uri</span>: <span class="ident">http::Uri</span>, <span class="ident">quoter</span>: <span class="kw-2">&amp;</span><span class="ident">Quoter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Url</span> {
         <span class="ident">Url</span> {
             <span class="ident">path</span>: <span class="ident">quoter</span>.<span class="ident">requote</span>(<span class="ident">uri</span>.<span class="ident">path</span>().<span class="ident">as_bytes</span>()),
             <span class="ident">uri</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">uri</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">http</span>::<span class="ident">Uri</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">uri</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">http::Uri</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">uri</span>
     }
 
@@ -316,13 +316,13 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">http</span>::<span class="ident">Uri</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">http::Uri</span>) {
         <span class="self">self</span>.<span class="ident">uri</span> <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">clone</span>();
         <span class="self">self</span>.<span class="ident">path</span> <span class="op">=</span> <span class="ident">DEFAULT_QUOTER</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">requote</span>(<span class="ident">uri</span>.<span class="ident">path</span>().<span class="ident">as_bytes</span>()));
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_with_quoter</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">http</span>::<span class="ident">Uri</span>, <span class="ident">quoter</span>: <span class="kw-2">&amp;</span><span class="ident">Quoter</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_with_quoter</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">http::Uri</span>, <span class="ident">quoter</span>: <span class="kw-2">&amp;</span><span class="ident">Quoter</span>) {
         <span class="self">self</span>.<span class="ident">uri</span> <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">clone</span>();
         <span class="self">self</span>.<span class="ident">path</span> <span class="op">=</span> <span class="ident">quoter</span>.<span class="ident">requote</span>(<span class="ident">uri</span>.<span class="ident">path</span>().<span class="ident">as_bytes</span>());
     }
@@ -409,7 +409,7 @@
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;%&#39;</span> {
                 <span class="ident">has_pct</span> <span class="op">=</span> <span class="number">1</span>;
                 <span class="kw">if</span> <span class="ident">cloned</span>.<span class="ident">is_none</span>() {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">len</span>);
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">len</span>);
                     <span class="ident">c</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>[..<span class="ident">idx</span>]);
                     <span class="ident">cloned</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>);
                 }
@@ -422,7 +422,7 @@
         <span class="ident">cloned</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">data</span><span class="op">|</span> {
             <span class="comment">// SAFETY: we get data from http::Uri, which does UTF-8 checks already</span>
             <span class="comment">// this code only decodes valid pct encoded values</span>
-            <span class="kw">unsafe</span> { <span class="ident">String</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">data</span>) }
+            <span class="kw">unsafe</span> { <span class="ident">String::from_utf8_unchecked</span>(<span class="ident">data</span>) }
         })
     }
 }
@@ -447,28 +447,28 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">http</span>::<span class="ident">Uri</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
+    <span class="kw">use</span> <span class="ident">http::Uri</span>;
+    <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Path</span>, <span class="ident">ResourceDef</span>};
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_parse_url</span>() {
-        <span class="kw">let</span> <span class="ident">re</span> <span class="op">=</span> <span class="ident">ResourceDef</span>::<span class="ident">new</span>(<span class="string">&quot;/user/{id}/test&quot;</span>);
+        <span class="kw">let</span> <span class="ident">re</span> <span class="op">=</span> <span class="ident">ResourceDef::new</span>(<span class="string">&quot;/user/{id}/test&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">try_from</span>(<span class="string">&quot;/user/2345/test&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">new</span>(<span class="ident">url</span>));
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri::try_from</span>(<span class="string">&quot;/user/2345/test&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="ident">Url::new</span>(<span class="ident">url</span>));
         <span class="macro">assert!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;2345&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">try_from</span>(<span class="string">&quot;/user/qwe%25/test&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">new</span>(<span class="ident">url</span>));
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri::try_from</span>(<span class="string">&quot;/user/qwe%25/test&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="ident">Url::new</span>(<span class="ident">url</span>));
         <span class="macro">assert!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;qwe%&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">try_from</span>(<span class="string">&quot;/user/qwe%25rty/test&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">new</span>(<span class="ident">url</span>));
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Uri::try_from</span>(<span class="string">&quot;/user/qwe%25rty/test&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="ident">Url::new</span>(<span class="ident">url</span>));
         <span class="macro">assert!</span>(<span class="ident">re</span>.<span class="ident">match_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;qwe%rty&quot;</span>);
     }

@@ -276,7 +276,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Router</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RouterBuilder</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
         <span class="ident">RouterBuilder</span> {
-            <span class="ident">resources</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">resources</span>: <span class="ident">Vec::new</span>(),
         }
     }
 
@@ -355,14 +355,14 @@
         <span class="ident">resource</span>: <span class="ident">T</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="ident">ResourceDef</span>, <span class="ident">T</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">resources</span>
-            .<span class="ident">push</span>((<span class="ident">ResourceDef</span>::<span class="ident">new</span>(<span class="ident">path</span>), <span class="ident">resource</span>, <span class="prelude-val">None</span>));
+            .<span class="ident">push</span>((<span class="ident">ResourceDef::new</span>(<span class="ident">path</span>), <span class="ident">resource</span>, <span class="prelude-val">None</span>));
         <span class="self">self</span>.<span class="ident">resources</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>()
     }
 
     <span class="doccomment">/// Register resource for specified path prefix.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prefix</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">prefix</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">resource</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="ident">ResourceDef</span>, <span class="ident">T</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>) {
         <span class="self">self</span>.<span class="ident">resources</span>
-            .<span class="ident">push</span>((<span class="ident">ResourceDef</span>::<span class="ident">prefix</span>(<span class="ident">prefix</span>), <span class="ident">resource</span>, <span class="prelude-val">None</span>));
+            .<span class="ident">push</span>((<span class="ident">ResourceDef::prefix</span>(<span class="ident">prefix</span>), <span class="ident">resource</span>, <span class="prelude-val">None</span>));
         <span class="self">self</span>.<span class="ident">resources</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>()
     }
 
@@ -380,13 +380,13 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">router</span>::{<span class="ident">ResourceId</span>, <span class="ident">Router</span>};
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::path::Path</span>;
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::router</span>::{<span class="ident">ResourceId</span>, <span class="ident">Router</span>};
 
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">cognitive_complexity</span>)]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cognitive_complexity</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_recognizer_1</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">build</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="ident">::build</span>();
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/name&quot;</span>, <span class="number">10</span>).<span class="number">0</span>.<span class="ident">set_id</span>(<span class="number">0</span>);
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/name/{val}&quot;</span>, <span class="number">11</span>).<span class="number">0</span>.<span class="ident">set_id</span>(<span class="number">1</span>);
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/name/{val}/index.html&quot;</span>, <span class="number">12</span>).<span class="number">0</span>.<span class="ident">set_id</span>(<span class="number">2</span>);
@@ -397,55 +397,55 @@
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/{test}/index.html&quot;</span>, <span class="number">17</span>).<span class="number">0</span>.<span class="ident">set_id</span>(<span class="number">7</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">router</span>.<span class="ident">finish</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/unknown&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/unknown&quot;</span>);
         <span class="macro">assert!</span>(<span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">is_none</span>());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/name&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/name&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">10</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">0</span>));
         <span class="macro">assert!</span>(<span class="ident">path</span>.<span class="ident">is_empty</span>());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/name/value&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/name/value&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">11</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">1</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;val&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;value&quot;</span>);
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>[<span class="string">&quot;val&quot;</span>], <span class="string">&quot;value&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/name/value2/index.html&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/name/value2/index.html&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">12</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">2</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;val&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;value2&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/file/file.gz&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/file/file.gz&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">13</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">3</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;file&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;file&quot;</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;ext&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;gz&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/vtest/ttt/index.html&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/vtest/ttt/index.html&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">14</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">4</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;val&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;test&quot;</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;val2&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;ttt&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/v/blah-blah/index.html&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/v/blah-blah/index.html&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">15</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">5</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;tail&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;blah-blah/index.html&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/test2/index.html&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/test2/index.html&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">16</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">6</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">path</span>.<span class="ident">get</span>(<span class="string">&quot;test&quot;</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;index&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/bbb/index.html&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/bbb/index.html&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">info</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">17</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">info</span>, <span class="ident">ResourceId</span>(<span class="number">7</span>));
@@ -454,37 +454,37 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_recognizer_2</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">build</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="ident">::build</span>();
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/index.json&quot;</span>, <span class="number">10</span>);
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/{source}.json&quot;</span>, <span class="number">11</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">router</span>.<span class="ident">finish</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/index.json&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/index.json&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">10</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/test.json&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/test.json&quot;</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">11</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_recognizer_with_prefix</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">build</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="ident">::build</span>();
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/name&quot;</span>, <span class="number">10</span>).<span class="number">0</span>.<span class="ident">set_id</span>(<span class="number">0</span>);
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/name/{val}&quot;</span>, <span class="number">11</span>).<span class="number">0</span>.<span class="ident">set_id</span>(<span class="number">1</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">router</span>.<span class="ident">finish</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/name&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/name&quot;</span>);
         <span class="ident">path</span>.<span class="ident">skip</span>(<span class="number">5</span>);
         <span class="macro">assert!</span>(<span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">is_none</span>());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/test/name&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/test/name&quot;</span>);
         <span class="ident">path</span>.<span class="ident">skip</span>(<span class="number">5</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">10</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/test/name/value&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/test/name/value&quot;</span>);
         <span class="ident">path</span>.<span class="ident">skip</span>(<span class="number">5</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="ident">id</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">11</span>);
@@ -493,25 +493,25 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>[<span class="string">&quot;val&quot;</span>], <span class="string">&quot;value&quot;</span>);
 
         <span class="comment">// same patterns</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">build</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">Router</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="ident">::build</span>();
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/name&quot;</span>, <span class="number">10</span>);
         <span class="ident">router</span>.<span class="ident">path</span>(<span class="string">&quot;/name/{val}&quot;</span>, <span class="number">11</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">router</span> <span class="op">=</span> <span class="ident">router</span>.<span class="ident">finish</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/name&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/name&quot;</span>);
         <span class="ident">path</span>.<span class="ident">skip</span>(<span class="number">6</span>);
         <span class="macro">assert!</span>(<span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">is_none</span>());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/test2/name&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/test2/name&quot;</span>);
         <span class="ident">path</span>.<span class="ident">skip</span>(<span class="number">6</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">10</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/test2/name-test&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/test2/name-test&quot;</span>);
         <span class="ident">path</span>.<span class="ident">skip</span>(<span class="number">6</span>);
         <span class="macro">assert!</span>(<span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">is_none</span>());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;/test2/name/ttt&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="string">&quot;/test2/name/ttt&quot;</span>);
         <span class="ident">path</span>.<span class="ident">skip</span>(<span class="number">6</span>);
         <span class="kw">let</span> (<span class="ident">h</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">router</span>.<span class="ident">recognize_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">h</span>, <span class="number">11</span>);

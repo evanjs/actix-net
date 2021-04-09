@@ -49,9 +49,9 @@
 <span class="doccomment">//! * `rustls` - TLS acceptor using the `rustls` crate.</span>
 <span class="doccomment">//! * `native-tls` - TLS acceptor using the `native-tls` crate.</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::{<span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>};
+<span class="kw">use</span> <span class="ident">std::sync::atomic</span>::{<span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>};
 
-<span class="kw">use</span> <span class="ident">actix_utils</span>::<span class="ident">counter</span>::<span class="ident">Counter</span>;
+<span class="kw">use</span> <span class="ident">actix_utils::counter::Counter</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;openssl&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">openssl</span>;
@@ -62,10 +62,10 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native-tls&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">native_tls</span>;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static</span> <span class="ident">MAX_CONN</span>: <span class="ident">AtomicUsize</span> <span class="op">=</span> <span class="ident">AtomicUsize</span>::<span class="ident">new</span>(<span class="number">256</span>);
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static</span> <span class="ident">MAX_CONN</span>: <span class="ident">AtomicUsize</span> <span class="op">=</span> <span class="ident">AtomicUsize::new</span>(<span class="number">256</span>);
 
 <span class="macro">thread_local!</span> {
-    <span class="kw">static</span> <span class="ident">MAX_CONN_COUNTER</span>: <span class="ident">Counter</span> <span class="op">=</span> <span class="ident">Counter</span>::<span class="ident">new</span>(<span class="ident">MAX_CONN</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">Relaxed</span>));
+    <span class="kw">static</span> <span class="ident">MAX_CONN_COUNTER</span>: <span class="ident">Counter</span> <span class="op">=</span> <span class="ident">Counter::new</span>(<span class="ident">MAX_CONN</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>));
 }
 
 <span class="doccomment">/// Sets the maximum per-worker concurrent TLS connection limit.</span>
@@ -75,7 +75,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// By default, the connection limit is 256.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_concurrent_tls_connect</span>(<span class="ident">num</span>: <span class="ident">usize</span>) {
-    <span class="ident">MAX_CONN</span>.<span class="ident">store</span>(<span class="ident">num</span>, <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>);
+    <span class="ident">MAX_CONN</span>.<span class="ident">store</span>(<span class="ident">num</span>, <span class="ident">Ordering::Relaxed</span>);
 }
 
 <span class="doccomment">/// TLS error combined with service error.</span>

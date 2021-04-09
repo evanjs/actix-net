@@ -40,12 +40,12 @@
 <span class="kw">mod</span> <span class="ident">bcodec</span>;
 <span class="kw">mod</span> <span class="ident">framed</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bcodec</span>::<span class="ident">BytesCodec</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">framed</span>::{<span class="ident">Framed</span>, <span class="ident">FramedParts</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::bcodec::BytesCodec</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::framed</span>::{<span class="ident">Framed</span>, <span class="ident">FramedParts</span>};
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">io</span>::{<span class="ident">AsyncRead</span>, <span class="ident">AsyncWrite</span>, <span class="ident">ReadBuf</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tokio_util</span>::<span class="ident">codec</span>::{<span class="ident">Decoder</span>, <span class="ident">Encoder</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tokio_util</span>::<span class="ident">io</span>::<span class="ident">poll_read_buf</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tokio::io</span>::{<span class="ident">AsyncRead</span>, <span class="ident">AsyncWrite</span>, <span class="ident">ReadBuf</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tokio_util::codec</span>::{<span class="ident">Decoder</span>, <span class="ident">Encoder</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tokio_util::io::poll_read_buf</span>;
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="actix_codec" data-search-js="../../search-index.js"></div>
     <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>

@@ -22,17 +22,17 @@ the request/response lifecycle. It may modify request and/or response.</p>
 <span class="kw">where</span>
     <span class="ident">S</span>: <span class="ident">Service</span>,
 {
-    <span class="kw">type</span> <span class="ident">Request</span> <span class="op">=</span> <span class="ident">S</span>::<span class="ident">Request</span>;
-    <span class="kw">type</span> <span class="ident">Response</span> <span class="op">=</span> <span class="ident">S</span>::<span class="ident">Response</span>;
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">TimeoutError</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Request</span> <span class="op">=</span> <span class="ident">S::Request</span>;
+    <span class="kw">type</span> <span class="ident">Response</span> <span class="op">=</span> <span class="ident">S::Response</span>;
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">TimeoutError</span><span class="op">&lt;</span><span class="ident">S::Error</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Future</span> <span class="op">=</span> <span class="ident">TimeoutServiceResponse</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>;
 
-    <span class="ident">actix_service</span>::<span class="macro">forward_ready!</span>(<span class="ident">service</span>);
+    <span class="macro">actix_service::forward_ready!</span>(<span class="ident">service</span>);
 
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="ident">S</span>::<span class="ident">Request</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Future</span> {
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="ident">S::Request</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::Future</span> {
         <span class="ident">TimeoutServiceResponse</span> {
             <span class="ident">fut</span>: <span class="self">self</span>.<span class="ident">service</span>.<span class="ident">call</span>(<span class="ident">req</span>),
-            <span class="ident">sleep</span>: <span class="ident">Sleep</span>::<span class="ident">new</span>(<span class="ident">clock</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">timeout</span>),
+            <span class="ident">sleep</span>: <span class="ident">Sleep::new</span>(<span class="ident">clock::now</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">timeout</span>),
         }
     }
 }</pre></div>
@@ -53,14 +53,14 @@ assuming ownership of the next Service.</p>
 <span class="kw">where</span>
     <span class="ident">S</span>: <span class="ident">Service</span>,
 {
-    <span class="kw">type</span> <span class="ident">Request</span> <span class="op">=</span> <span class="ident">S</span>::<span class="ident">Request</span>;
-    <span class="kw">type</span> <span class="ident">Response</span> <span class="op">=</span> <span class="ident">S</span>::<span class="ident">Response</span>;
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">TimeoutError</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">InitError</span> <span class="op">=</span> <span class="ident">S</span>::<span class="ident">Error</span>;
+    <span class="kw">type</span> <span class="ident">Request</span> <span class="op">=</span> <span class="ident">S::Request</span>;
+    <span class="kw">type</span> <span class="ident">Response</span> <span class="op">=</span> <span class="ident">S::Response</span>;
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">TimeoutError</span><span class="op">&lt;</span><span class="ident">S::Error</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">InitError</span> <span class="op">=</span> <span class="ident">S::Error</span>;
     <span class="kw">type</span> <span class="ident">Transform</span> <span class="op">=</span> <span class="ident">Timeout</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Future</span> <span class="op">=</span> <span class="ident">Ready</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Transform</span>, <span class="self">Self</span>::<span class="ident">InitError</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Future</span> <span class="op">=</span> <span class="ident">Ready</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::Transform</span>, <span class="self">Self</span><span class="ident">::InitError</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">new_transform</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">service</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Future</span> {
+    <span class="kw">fn</span> <span class="ident">new_transform</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">service</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::Future</span> {
         <span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">TimeoutService</span> {
             <span class="ident">service</span>,
             <span class="ident">timeout</span>: <span class="self">self</span>.<span class="ident">timeout</span>,

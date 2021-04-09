@@ -8,7 +8,7 @@ count. Workers must be greater than 0.</p>
 <p>One thread pool is set up <strong>per worker</strong>; not shared across workers.</p>
 <h1 id="examples" class="section-header"><a href="#examples">Examples:</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">ServerBuilder</span>::<span class="ident">new</span>()
+<span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">ServerBuilder::new</span>()
     .<span class="ident">workers</span>(<span class="number">4</span>) <span class="comment">// server has 4 worker thread.</span>
     .<span class="ident">worker_max_blocking_threads</span>(<span class="number">4</span>); <span class="comment">// every worker has 4 max blocking threads.</span></pre></div>
 <p>See [tokio::runtime::Builder::max_blocking_threads] for behavior reference.</p>

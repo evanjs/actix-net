@@ -8,7 +8,7 @@ on submitted futures.</p>
 <p>See <a href="../actix_rt/index.html" title="crate">crate root</a> documentation for more details.</p>
 <h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="kw">let</span> <span class="ident">rt</span> <span class="op">=</span> <span class="ident">actix_rt</span>::<span class="ident">Runtime</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+<span class="kw">let</span> <span class="ident">rt</span> <span class="op">=</span> <span class="ident">actix_rt::Runtime::new</span>().<span class="ident">unwrap</span>();
 
 <span class="comment">// Spawn a future onto the runtime</span>
 <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">rt</span>.<span class="ident">spawn</span>(<span class="kw">async</span> {
