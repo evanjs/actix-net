@@ -501,6 +501,15 @@
 <span id="500">500</span>
 <span id="501">501</span>
 <span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">future::Future</span>,
@@ -523,7 +532,10 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::socket</span>::{<span class="ident">MioListener</span>, <span class="ident">StdSocketAddr</span>, <span class="ident">StdTcpListener</span>, <span class="ident">ToSocketAddrs</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::socket</span>::{<span class="ident">MioTcpListener</span>, <span class="ident">MioTcpSocket</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::waker_queue</span>::{<span class="ident">WakerInterest</span>, <span class="ident">WakerQueue</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::worker</span>::{<span class="ident">ServerWorker</span>, <span class="ident">ServerWorkerConfig</span>, <span class="ident">WorkerAvailability</span>, <span class="ident">WorkerHandle</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::worker</span>::{
+    <span class="ident">ServerWorker</span>, <span class="ident">ServerWorkerConfig</span>, <span class="ident">WorkerAvailability</span>, <span class="ident">WorkerHandleAccept</span>,
+    <span class="ident">WorkerHandleServer</span>,
+};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">join_all</span>, <span class="ident">Token</span>};
 
 <span class="doccomment">/// Server builder</span>
@@ -531,7 +543,7 @@
     <span class="ident">threads</span>: <span class="ident">usize</span>,
     <span class="ident">token</span>: <span class="ident">Token</span>,
     <span class="ident">backlog</span>: <span class="ident">u32</span>,
-    <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">WorkerHandle</span>)<span class="op">&gt;</span>,
+    <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">WorkerHandleServer</span>)<span class="op">&gt;</span>,
     <span class="ident">services</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">InternalServiceFactory</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">sockets</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Token</span>, <span class="ident">String</span>, <span class="ident">MioListener</span>)<span class="op">&gt;</span>,
     <span class="ident">accept</span>: <span class="ident">AcceptLoop</span>,
@@ -784,10 +796,11 @@
             <span class="comment">// start workers</span>
             <span class="kw">let</span> <span class="ident">handles</span> <span class="op">=</span> (<span class="number">0</span>..<span class="self">self</span>.<span class="ident">threads</span>)
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">idx</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">start_worker</span>(<span class="ident">idx</span>, <span class="self">self</span>.<span class="ident">accept</span>.<span class="ident">waker_owned</span>());
-                    <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">push</span>((<span class="ident">idx</span>, <span class="ident">handle</span>.<span class="ident">clone</span>()));
+                    <span class="kw">let</span> (<span class="ident">handle_accept</span>, <span class="ident">handle_server</span>) <span class="op">=</span>
+                        <span class="self">self</span>.<span class="ident">start_worker</span>(<span class="ident">idx</span>, <span class="self">self</span>.<span class="ident">accept</span>.<span class="ident">waker_owned</span>());
+                    <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">push</span>((<span class="ident">idx</span>, <span class="ident">handle_server</span>));
 
-                    <span class="ident">handle</span>
+                    <span class="ident">handle_accept</span>
                 })
                 .<span class="ident">collect</span>();
 
@@ -815,7 +828,11 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">start_worker</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">idx</span>: <span class="ident">usize</span>, <span class="ident">waker</span>: <span class="ident">WakerQueue</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">WorkerHandle</span> {
+    <span class="kw">fn</span> <span class="ident">start_worker</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">idx</span>: <span class="ident">usize</span>,
+        <span class="ident">waker</span>: <span class="ident">WakerQueue</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">WorkerHandleAccept</span>, <span class="ident">WorkerHandleServer</span>) {
         <span class="kw">let</span> <span class="ident">avail</span> <span class="op">=</span> <span class="ident">WorkerAvailability::new</span>(<span class="ident">waker</span>);
         <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">services</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">clone_factory</span>()).<span class="ident">collect</span>();
 
@@ -941,9 +958,10 @@
                         <span class="kw">break</span>;
                     }
 
-                    <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">start_worker</span>(<span class="ident">new_idx</span>, <span class="self">self</span>.<span class="ident">accept</span>.<span class="ident">waker_owned</span>());
-                    <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">push</span>((<span class="ident">new_idx</span>, <span class="ident">handle</span>.<span class="ident">clone</span>()));
-                    <span class="self">self</span>.<span class="ident">accept</span>.<span class="ident">wake</span>(<span class="ident">WakerInterest::Worker</span>(<span class="ident">handle</span>));
+                    <span class="kw">let</span> (<span class="ident">handle_accept</span>, <span class="ident">handle_server</span>) <span class="op">=</span>
+                        <span class="self">self</span>.<span class="ident">start_worker</span>(<span class="ident">new_idx</span>, <span class="self">self</span>.<span class="ident">accept</span>.<span class="ident">waker_owned</span>());
+                    <span class="self">self</span>.<span class="ident">handles</span>.<span class="ident">push</span>((<span class="ident">new_idx</span>, <span class="ident">handle_server</span>));
+                    <span class="self">self</span>.<span class="ident">accept</span>.<span class="ident">wake</span>(<span class="ident">WakerInterest::Worker</span>(<span class="ident">handle_accept</span>));
                 }
             }
         }

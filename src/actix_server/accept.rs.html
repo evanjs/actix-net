@@ -462,7 +462,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::server::Server</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::socket</span>::{<span class="ident">MioListener</span>, <span class="ident">SocketAddr</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::waker_queue</span>::{<span class="ident">WakerInterest</span>, <span class="ident">WakerQueue</span>, <span class="ident">WAKER_TOKEN</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::worker</span>::{<span class="ident">Conn</span>, <span class="ident">WorkerHandle</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::worker</span>::{<span class="ident">Conn</span>, <span class="ident">WorkerHandleAccept</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::Token</span>;
 
 <span class="kw">struct</span> <span class="ident">ServerSocketInfo</span> {
@@ -516,7 +516,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">start</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">socks</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Token</span>, <span class="ident">MioListener</span>)<span class="op">&gt;</span>,
-        <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandle</span><span class="op">&gt;</span>,
+        <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandleAccept</span><span class="op">&gt;</span>,
     ) {
         <span class="kw">let</span> <span class="ident">srv</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">srv</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Can not re-use AcceptInfo&quot;</span>);
         <span class="kw">let</span> <span class="ident">poll</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">poll</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
@@ -530,7 +530,7 @@
 <span class="kw">struct</span> <span class="ident">Accept</span> {
     <span class="ident">poll</span>: <span class="ident">Poll</span>,
     <span class="ident">waker</span>: <span class="ident">WakerQueue</span>,
-    <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandle</span><span class="op">&gt;</span>,
+    <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandleAccept</span><span class="op">&gt;</span>,
     <span class="ident">srv</span>: <span class="ident">Server</span>,
     <span class="ident">next</span>: <span class="ident">usize</span>,
     <span class="ident">backpressure</span>: <span class="ident">bool</span>,
@@ -555,7 +555,7 @@
         <span class="ident">waker</span>: <span class="ident">WakerQueue</span>,
         <span class="ident">socks</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Token</span>, <span class="ident">MioListener</span>)<span class="op">&gt;</span>,
         <span class="ident">srv</span>: <span class="ident">Server</span>,
-        <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandle</span><span class="op">&gt;</span>,
+        <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandleAccept</span><span class="op">&gt;</span>,
     ) {
         <span class="comment">// Accept runs in its own thread and would want to spawn additional futures to current</span>
         <span class="comment">// actix system.</span>
@@ -575,7 +575,7 @@
         <span class="ident">poll</span>: <span class="ident">Poll</span>,
         <span class="ident">waker</span>: <span class="ident">WakerQueue</span>,
         <span class="ident">socks</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Token</span>, <span class="ident">MioListener</span>)<span class="op">&gt;</span>,
-        <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandle</span><span class="op">&gt;</span>,
+        <span class="ident">handles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WorkerHandleAccept</span><span class="op">&gt;</span>,
         <span class="ident">srv</span>: <span class="ident">Server</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Accept</span>, <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">ServerSocketInfo</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sockets</span> <span class="op">=</span> <span class="ident">Slab::new</span>();
