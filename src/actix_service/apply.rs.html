@@ -271,6 +271,10 @@
 <span id="270">270</span>
 <span id="271">271</span>
 <span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">core</span>::{
     <span class="ident">future::Future</span>,
@@ -488,7 +492,11 @@
     <span class="kw">use</span> <span class="ident">futures_util::future::lazy</span>;
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ok</span>, <span class="ident">pipeline</span>, <span class="ident">pipeline_factory</span>, <span class="ident">Ready</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::{
+        <span class="ident">ok</span>,
+        <span class="ident">pipeline</span>::{<span class="ident">pipeline</span>, <span class="ident">pipeline_factory</span>},
+        <span class="ident">Ready</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>,
+    };
 
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
     <span class="kw">struct</span> <span class="ident">Srv</span>;

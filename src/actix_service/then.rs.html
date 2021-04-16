@@ -329,6 +329,10 @@
 <span id="328">328</span>
 <span id="329">329</span>
 <span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">alloc::rc::Rc</span>;
 <span class="kw">use</span> <span class="ident">core</span>::{
@@ -578,7 +582,11 @@
 
     <span class="kw">use</span> <span class="ident">futures_util::future::lazy</span>;
 
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">err</span>, <span class="ident">ok</span>, <span class="ident">pipeline</span>, <span class="ident">pipeline_factory</span>, <span class="ident">ready</span>, <span class="ident">Ready</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::{
+        <span class="ident">err</span>, <span class="ident">ok</span>,
+        <span class="ident">pipeline</span>::{<span class="ident">pipeline</span>, <span class="ident">pipeline_factory</span>},
+        <span class="ident">ready</span>, <span class="ident">Ready</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>,
+    };
 
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
     <span class="kw">struct</span> <span class="ident">Srv1</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>);

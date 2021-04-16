@@ -181,9 +181,9 @@
 <span id="180">180</span>
 <span id="181">181</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="doccomment">/// A boilerplate implementation of [`Service::poll_ready`] that always signals readiness.</span>
+<span class="doccomment">/// An implementation of [`poll_ready`]() that always signals readiness.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [`Service::poll_ready`]: crate::Service::poll_ready</span>
+<span class="doccomment">/// [`poll_ready`]: crate::Service::poll_ready</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
 <span class="doccomment">/// ```no_run</span>
@@ -217,12 +217,12 @@
     };
 }
 
-<span class="doccomment">/// A boilerplate implementation of [`Service::poll_ready`] that forwards readiness checks to a</span>
+<span class="doccomment">/// An implementation of [`poll_ready`] that forwards readiness checks to a</span>
 <span class="doccomment">/// named struct field.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Tuple structs are not supported.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// [`Service::poll_ready`]: crate::Service::poll_ready</span>
+<span class="doccomment">/// [`poll_ready`]: crate::Service::poll_ready</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
 <span class="doccomment">/// ```no_run</span>

@@ -163,7 +163,7 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">WakerInterest</span> {
     <span class="doccomment">/// `WorkerAvailable` is an interest from `Worker` notifying `Accept` there is a worker</span>
     <span class="doccomment">/// available and can accept new tasks.</span>
-    <span class="ident">WorkerAvailable</span>,
+    <span class="ident">WorkerAvailable</span>(<span class="ident">usize</span>),
     <span class="doccomment">/// `Pause`, `Resume`, `Stop` Interest are from `ServerBuilder` future. It listens to</span>
     <span class="doccomment">/// `ServerCommand` and notify `Accept` to do exactly these tasks.</span>
     <span class="ident">Pause</span>,

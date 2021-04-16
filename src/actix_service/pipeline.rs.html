@@ -305,7 +305,13 @@
 <span id="304">304</span>
 <span id="305">305</span>
 <span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="comment">// TODO: see if pipeline is necessary</span>
+<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+
 <span class="kw">use</span> <span class="ident">core</span>::{
     <span class="ident">marker::PhantomData</span>,
     <span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>},
@@ -319,7 +325,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">IntoService</span>, <span class="ident">IntoServiceFactory</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>};
 
 <span class="doccomment">/// Construct new pipeline with one service in pipeline chain.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pipeline</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>(<span class="ident">service</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Pipeline</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">pipeline</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>(<span class="ident">service</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Pipeline</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">I</span>: <span class="ident">IntoService</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span>,
     <span class="ident">S</span>: <span class="ident">Service</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
@@ -331,7 +337,7 @@
 }
 
 <span class="doccomment">/// Construct new pipeline factory with one service factory.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pipeline_factory</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">SF</span>, <span class="ident">Req</span><span class="op">&gt;</span>(<span class="ident">factory</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PipelineFactory</span><span class="op">&lt;</span><span class="ident">SF</span>, <span class="ident">Req</span><span class="op">&gt;</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">pipeline_factory</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">SF</span>, <span class="ident">Req</span><span class="op">&gt;</span>(<span class="ident">factory</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PipelineFactory</span><span class="op">&lt;</span><span class="ident">SF</span>, <span class="ident">Req</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">I</span>: <span class="ident">IntoServiceFactory</span><span class="op">&lt;</span><span class="ident">SF</span>, <span class="ident">Req</span><span class="op">&gt;</span>,
     <span class="ident">SF</span>: <span class="ident">ServiceFactory</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
@@ -343,7 +349,7 @@
 }
 
 <span class="doccomment">/// Pipeline service - pipeline allows to compose multiple service into one service.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pipeline</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Pipeline</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">Req</span><span class="op">&gt;</span> {
     <span class="ident">service</span>: <span class="ident">S</span>,
     <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
 }
@@ -465,7 +471,7 @@
 }
 
 <span class="doccomment">/// Pipeline factory</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PipelineFactory</span><span class="op">&lt;</span><span class="ident">SF</span>, <span class="ident">Req</span><span class="op">&gt;</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">PipelineFactory</span><span class="op">&lt;</span><span class="ident">SF</span>, <span class="ident">Req</span><span class="op">&gt;</span> {
     <span class="ident">factory</span>: <span class="ident">SF</span>,
     <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
 }

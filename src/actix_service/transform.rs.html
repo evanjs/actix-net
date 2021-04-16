@@ -269,7 +269,6 @@
 <span id="268">268</span>
 <span id="269">269</span>
 <span id="270">270</span>
-<span id="271">271</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">alloc</span>::{<span class="ident">rc::Rc</span>, <span class="ident">sync::Arc</span>};
 <span class="kw">use</span> <span class="ident">core</span>::{
@@ -294,11 +293,10 @@
     <span class="ident">ApplyTransform::new</span>(<span class="ident">t</span>, <span class="ident">factory</span>.<span class="ident">into_factory</span>())
 }
 
-<span class="doccomment">/// The `Transform` trait defines the interface of a service factory that wraps inner service</span>
-<span class="doccomment">/// during construction.</span>
+<span class="doccomment">/// Defines the interface of a service factory that wraps inner service during construction.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Transform(middleware) wraps inner service and runs during inbound and/or outbound processing in</span>
-<span class="doccomment">/// the request/response lifecycle. It may modify request and/or response.</span>
+<span class="doccomment">/// Transformers wrap an inner service and runs during inbound and/or outbound processing in the</span>
+<span class="doccomment">/// service lifecycle. It may modify request and/or response.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// For example, a timeout service wrapper:</span>
 <span class="doccomment">///</span>

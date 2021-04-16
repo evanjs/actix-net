@@ -343,6 +343,8 @@
 <span id="342">342</span>
 <span id="343">343</span>
 <span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">alloc::rc::Rc</span>;
 <span class="kw">use</span> <span class="ident">core</span>::{
@@ -357,11 +359,11 @@
 
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Service</span>, <span class="ident">ServiceFactory</span>};
 
-<span class="doccomment">/// Service for the `and_then` combinator, chaining a computation onto the end</span>
-<span class="doccomment">/// of another service which completes successfully.</span>
+<span class="doccomment">/// Service for the `and_then` combinator, chaining a computation onto the end of another service</span>
+<span class="doccomment">/// which completes successfully.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is created by the `Pipeline::and_then` method.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">AndThenService</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>(<span class="ident">Rc</span><span class="op">&lt;</span>(<span class="ident">A</span>, <span class="ident">B</span>)<span class="op">&gt;</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AndThenService</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>(<span class="ident">Rc</span><span class="op">&lt;</span>(<span class="ident">A</span>, <span class="ident">B</span>)<span class="op">&gt;</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span> <span class="ident">AndThenService</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Create new `AndThen` combinator</span>
@@ -410,7 +412,7 @@
 }
 
 <span class="macro">pin_project!</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">AndThenServiceResponse</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AndThenServiceResponse</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">A</span>: <span class="ident">Service</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
         <span class="ident">B</span>: <span class="ident">Service</span><span class="op">&lt;</span><span class="ident">A::Response</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">A::Error</span><span class="op">&gt;</span>,
@@ -463,7 +465,7 @@
 }
 
 <span class="doccomment">/// `.and_then()` service factory combinator</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">AndThenServiceFactory</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AndThenServiceFactory</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">A</span>: <span class="ident">ServiceFactory</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
     <span class="ident">A::Config</span>: <span class="ident">Clone</span>,
@@ -546,7 +548,7 @@
 }
 
 <span class="macro">pin_project!</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">AndThenServiceFactoryResponse</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AndThenServiceFactoryResponse</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">Req</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">A</span>: <span class="ident">ServiceFactory</span><span class="op">&lt;</span><span class="ident">Req</span><span class="op">&gt;</span>,
         <span class="ident">B</span>: <span class="ident">ServiceFactory</span><span class="op">&lt;</span><span class="ident">A::Response</span><span class="op">&gt;</span>,
@@ -618,7 +620,9 @@
     <span class="kw">use</span> <span class="ident">futures_util::future::lazy</span>;
 
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">fn_factory</span>, <span class="ident">ok</span>, <span class="ident">pipeline</span>, <span class="ident">pipeline_factory</span>, <span class="ident">ready</span>, <span class="ident">Ready</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>,
+        <span class="ident">fn_factory</span>, <span class="ident">ok</span>,
+        <span class="ident">pipeline</span>::{<span class="ident">pipeline</span>, <span class="ident">pipeline_factory</span>},
+        <span class="ident">ready</span>, <span class="ident">Ready</span>, <span class="ident">Service</span>, <span class="ident">ServiceFactory</span>,
     };
 
     <span class="kw">struct</span> <span class="ident">Srv1</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Cell</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>);
