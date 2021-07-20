@@ -3,6 +3,50 @@
 ## Unreleased - 2021-xx-xx
 
 
+## 0.5.0-beta.1 - 2021-07-20
+* Fix a bug in multi-patterns where static patterns are interpreted as regex. [#366]
+* Introduce `ResourceDef::pattern_iter` to get an iterator over all patterns in a multi-pattern resource. [#373]
+* Fix segment interpolation leaving `Path` in unintended state after matching. [#368]
+* Fix `ResourceDef` `PartialEq` implementation. [#373]
+* Re-work `IntoPatterns` trait, adding a `Patterns` enum. [#372]
+* Implement `IntoPatterns` for `bytestring::ByteString`. [#372]
+* Rename `Path::{len => segment_count}` to be more descriptive of it's purpose. [#370]
+* Rename `ResourceDef::{resource_path => resource_path_from_iter}`. [#371]
+* `ResourceDef::resource_path_from_iter` now takes an `IntoIterator`. [#373]
+* Rename `ResourceDef::{resource_path_named => resource_path_from_map}`. [#371]
+* Rename `ResourceDef::{is_prefix_match => find_match}`. [#373]
+* Rename `ResourceDef::{match_path => capture_match_info}`. [#373]
+* Rename `ResourceDef::{match_path_checked => capture_match_info_fn}`. [#373]
+* Remove `ResourceDef::name_mut` and introduce `ResourceDef::set_name`. [#373]
+* Rename `Router::{*_checked => *_fn}`. [#373]
+* Return type of `ResourceDef::name` is now `Option<&str>`. [#373]
+* Return type of `ResourceDef::pattern` is now `Option<&str>`. [#373]
+
+[#368]: https://github.com/actix/actix-net/pull/368
+[#366]: https://github.com/actix/actix-net/pull/366
+[#368]: https://github.com/actix/actix-net/pull/368
+[#370]: https://github.com/actix/actix-net/pull/370
+[#371]: https://github.com/actix/actix-net/pull/371
+[#372]: https://github.com/actix/actix-net/pull/372
+[#373]: https://github.com/actix/actix-net/pull/373
+
+
+## 0.4.0 - 2021-06-06
+* When matching path parameters, `%25` is now kept in the percent-encoded form; no longer decoded to `%`. [#357]
+* Path tail patterns now match new lines (`\n`) in request URL. [#360]
+* Fixed a safety bug where `Path` could return a malformed string after percent decoding. [#359]
+* Methods `Path::{add, add_static}` now take `impl Into<Cow<'static, str>>`. [#345]
+
+[#345]: https://github.com/actix/actix-net/pull/345
+[#357]: https://github.com/actix/actix-net/pull/357
+[#359]: https://github.com/actix/actix-net/pull/359
+[#360]: https://github.com/actix/actix-net/pull/360
+
+
+## 0.3.0 - 2019-12-31
+* Version was yanked previously. See https://crates.io/crates/actix-router/0.3.0
+
+
 ## 0.2.7 - 2021-02-06
 * Add `Router::recognize_checked` [#247]
 
