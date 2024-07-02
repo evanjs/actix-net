@@ -8,7 +8,7 @@ downgrade-for-msrv:
 
 msrv := ```
     cargo metadata --format-version=1 \
-    | jq -r 'first(.packages[] | select(.source == null and .name == "actix-tls")) | .rust_version' \
+    | jq -r 'first(.packages[] | select(.source == null and .rust_version)) | .rust_version' \
     | sed -E 's/^1\.([0-9]{2})$/1\.\1\.0/'
 ```
 msrv_rustup := "+" + msrv
@@ -27,17 +27,23 @@ all_crate_features := if os() == "linux" {
     "--features='" + non_linux_all_features_list + "'"
 }
 
-m:
-    cargo metadata --format-version=1 \
-    | jq -r 'first(.packages[] | select(.source == null)) | .rust_version' \
-    | sed -E 's/^1\.([0-9]{2})$/1\.\1\.0/' \
-    | xargs -0 printf "msrv=%s" \
-    | tee /dev/stderr
+# Run Clippy over workspace.
+clippy toolchain="":
+    cargo {{ toolchain }} clippy --workspace --all-targets {{ all_crate_features }}
 
 # Test workspace code.
+[macos, windows]
 test toolchain="":
     cargo {{ toolchain }} test --lib --tests --package=actix-macros
     cargo {{ toolchain }} nextest run --workspace --exclude=actix-macros --no-default-features
+    cargo {{ toolchain }} nextest run --workspace --exclude=actix-macros {{ all_crate_features }}
+
+# Test workspace code.
+[linux]
+test toolchain="":
+    cargo {{ toolchain }} test --lib --tests --package=actix-macros
+    cargo {{ toolchain }} nextest run --workspace --exclude=actix-macros --no-default-features
+    cargo {{ toolchain }} nextest run --workspace --exclude=actix-macros {{ non_linux_all_features_list }}
     cargo {{ toolchain }} nextest run --workspace --exclude=actix-macros {{ all_crate_features }}
 
 # Test workspace using MSRV.
@@ -48,7 +54,7 @@ test-docs toolchain="": && doc
     cargo {{ toolchain }} test --doc --workspace {{ all_crate_features }} --no-fail-fast -- --nocapture
 
 # Test workspace.
-test-all toolchain="": (test toolchain) (test-docs)
+test-all toolchain="": (test toolchain) (test-docs toolchain)
 
 # Document crates in workspace.
 doc *args:
